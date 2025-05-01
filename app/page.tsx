@@ -42,7 +42,7 @@ export default function Home() {
     if(isConnected){
       const _currentAgent = await agentsContract.currentAgent(address);
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
-      const responseJson = await response.json();
+      const responseJson = await response.json() as any;
       setCurrentAgent(responseJson[Number(_currentAgent)-1]);
     }
   }
