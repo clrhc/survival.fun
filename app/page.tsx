@@ -42,7 +42,7 @@ export default function Home() {
     if(isConnected){
       const _currentAgent = await agentsContract.currentAgent(address);
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
-      const responseJson = await response.json() as any;
+      const responseJson = await response.json();
       setCurrentAgent(responseJson[Number(_currentAgent)-1]);
     }
   }
@@ -103,14 +103,14 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
-      <img src={currentAgent.image} />
-      <p className="text-center text-gray-200 w-1/2">{currentAgent.name}</p>
-      <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Unhingedness: {currentAgent.attributes[2].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Motivation: {currentAgent.attributes[3].value}</p>
-      <p className="text-center text-gray-200 w-1/2">{currentAgent.description}</p>
-      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p>
+      <img src={String(currentAgent.image)} />
+      <p className="text-center text-gray-200 w-1/2">{String(currentAgent.name)}</p>
+      <p className="text-center text-gray-200 w-1/2">Compliance: {String(currentAgent.attributes[0].value)}</p>
+      <p className="text-center text-gray-200 w-1/2">Creativity: {String(currentAgent.attributes[1].value)}</p>
+      <p className="text-center text-gray-200 w-1/2">Unhingedness: {String(currentAgent.attributes[2].value)}</p>
+      <p className="text-center text-gray-200 w-1/2">Motivation: {String(currentAgent.attributes[3].value)}</p>
+      <p className="text-center text-gray-200 w-1/2">{String(currentAgent.description)}</p>
+      <p className="text-center text-gray-200 w-1/2">Personality: {String(currentAgent.attributes[4].value)}</p>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
