@@ -36,7 +36,7 @@ export default function RootLayout({
             alt="survival.fun"
             className="h-10 ml-6"
           />
-          <appkit-button className="h-10 mr-6" />
+          <span className="h-10 mr-6"><appkit-button /></span>
         </header>
 
         {/* Main Content (Dynamic, Grows but Doesn't Force Scroll) */}
