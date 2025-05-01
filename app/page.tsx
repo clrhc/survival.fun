@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import reaper from './assets/img/reaper.png';
 import loadingGif from './assets/img/loading.gif';
 import Data from './data.json';
+import {ethers} from 'ethers';
 import agents from './abi/agents.json';
 
 /**
@@ -16,7 +17,6 @@ import agents from './abi/agents.json';
  * @returns {React.ReactNode} The home page
  */
 export default function Home() {
-  const ethers = require("ethers");
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
@@ -39,9 +39,9 @@ export default function Home() {
   useEffect(() => {
     async function init(){
     if(isConnected){
-      let _currentAgent = await agentsContract.currentAgent(address);
-      let response = await fetch('https://celerity.fun/api/json/metadata.json');
-      let responseJson = await response.json();
+      const _currentAgent = await agentsContract.currentAgent(address);
+      const response = await fetch('https://celerity.fun/api/json/metadata.json');
+      const responseJson = await response.json();
       setCurrentAgent(responseJson[Number(_currentAgent)-1]);
     }
   }

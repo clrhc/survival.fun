@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import survivalLogo from './assets/img/survivorLogo.png';
-import reaper from './assets/img/reaper.png';
 import "./globals.css";
 import { ContextProvider } from "./Web3Provider";
-import { useAppKit } from "@reown/appkit/react";
 
 
 /**

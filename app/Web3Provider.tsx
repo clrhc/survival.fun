@@ -17,8 +17,8 @@ if (!projectId) {
 // Set up metadata
 const metadata = {
   name: 'survival.fun',
-  description: 'AppKit Example',
-  url: 'https://reown.com/appkit', // origin must match your domain & subdomain
+  description: 'Survival Kit Example',
+  url: 'https://survival-fun-git-clr-clrhcs-projects.vercel.app', // origin must match your domain & subdomain
   icons: ['https://assets.reown.com/reown-profile-pic.png']
 }
 
