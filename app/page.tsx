@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAgent } from "./hooks/useAgent";
 import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
 import {useWriteContract} from 'wagmi';
+import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import reaper from './assets/img/reaper.png';
 import loadingGif from './assets/img/loading.gif';
@@ -77,7 +78,7 @@ export default function Home() {
       if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{
         try{await writeContract({ 
           abi: agents.abi,
-          address: Data.agentsAddress,
+          address: Data.agentsAddress as Address,
           functionName: 'Mint',
         });
         }catch(error){console.log(error)}
