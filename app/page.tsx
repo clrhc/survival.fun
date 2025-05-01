@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useAgent } from "./hooks/useAgent";
+import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
+import {useWriteContract} from 'wagmi';
 import ReactMarkdown from "react-markdown";
+import reaper from './assets/img/reaper.png';
+import loadingGif from './assets/img/loading.gif';
+import Data from './data.json';
+import agents from './abi/agents.json';
 
 /**
  * Home page for the AgentKit Quickstart
@@ -10,7 +16,16 @@ import ReactMarkdown from "react-markdown";
  * @returns {React.ReactNode} The home page
  */
 export default function Home() {
+  const ethers = require("ethers");
+  const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
+  const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
+  const { data: hash, writeContract, isPending } = useWriteContract();
+  const { open } = useAppKit();
+  const { address, isConnected } = useAppKitAccount();
+  const [currentAgent, setCurrentAgent] = useState(0);
   const [input, setInput] = useState("");
+  const [play, setPlay] = useState(0);
+
   const { messages, sendMessage, isThinking } = useAgent();
 
   // Ref for the messages container
@@ -20,6 +35,22 @@ export default function Home() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    async function init(){
+    if(isConnected){
+      let _currentAgent = await agentsContract.currentAgent(address);
+      let response = await fetch('https://celerity.fun/api/json/metadata.json');
+      let responseJson = await response.json();
+      setCurrentAgent(responseJson[Number(_currentAgent)-1]);
+    }
+  }
+
+    const interval = setInterval(() => init(), 1000);
+      return () => {
+      clearInterval(interval);
+      }
+  });
 
   // Auto-scroll whenever messages change
   useEffect(() => {
@@ -33,13 +64,60 @@ export default function Home() {
     await sendMessage(message);
   };
 
+  const checkPlay = async () => {
+    if(isConnected){
+    if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{setPlay(1);}
+    }else{
+      open();
+    }
+  }
+
+    const mintAgent = async () => {
+    if(isConnected){
+      if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{
+        try{await writeContract({ 
+          abi: agents.abi,
+          address: Data.agentsAddress,
+          functionName: 'Mint',
+        });
+        }catch(error){console.log(error)}
+        }
+      }else{
+        open();
+     }
+   }
+
   return (
     <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full">
-      <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
+     {play === 0 && <>
+     <img src={reaper.src} />
+     {isConnected ? <><button onClick={() => checkPlay()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Play</button>
+     </>:<><button onClick={() => open()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Connect</button></>}
+     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button></>}
+     {play === 1 && <>
+       <img src={reaper.src} />
+       {!hash && !isPending ? <><button onClick={() => mintAgent()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Mint Agent</button></>:<></>}
+       {isPending ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<></>}
+       {hash ? <><a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href={'https://sepolia.basescan.org/tx/'+String(hash)} target="_blank" rel="noopener noreferrer">YOUR MINT TRANSACTION CAN BE FOUND HERE</a><button onClick={() => checkPlay()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start Play</button></>:<></>}
+       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
+     </>}
+     {play === 2 && <>
+      <img src={currentAgent.image} />
+      <p className="text-center text-gray-200 w-1/2">{currentAgent.name}</p>
+      <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Unhingedness: {currentAgent.attributes[2].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Motivation: {currentAgent.attributes[3].value}</p>
+      <p className="text-center text-gray-200 w-1/2">{currentAgent.description}</p>
+      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
+     </>}
+     {play === 3 && <>
+     <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
         <div className="flex-grow overflow-y-auto space-y-3 p-2">
           {messages.length === 0 ? (
-            <p className="text-center text-gray-500">Start chatting with AgentKit...</p>
+            <p className="text-center text-gray-500">Welcome to survival.fun</p>
           ) : (
             messages.map((msg, index) => (
               <div
@@ -69,7 +147,7 @@ export default function Home() {
           )}
 
           {/* Thinking Indicator */}
-          {isThinking && <div className="text-right mr-2 text-gray-500 italic">🤖 Thinking...</div>}
+          {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
 
           {/* Invisible div to track the bottom */}
           <div ref={messagesEndRef} />
@@ -98,7 +176,7 @@ export default function Home() {
             Send
           </button>
         </div>
-      </div>
+      </div></>}
     </div>
   );
 }
