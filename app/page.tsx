@@ -18,12 +18,13 @@ import agents from './abi/agents.json';
  * @returns {React.ReactNode} The home page
  */
 export default function Home() {
+
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
-  const [currentAgent, setCurrentAgent] = useState(0);
+  const [currentAgent, setCurrentAgent] = useState("");
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
@@ -103,14 +104,14 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
-      <img src={String(currentAgent.image)} />
-      <p className="text-center text-gray-200 w-1/2">{String(currentAgent.name)}</p>
-      <p className="text-center text-gray-200 w-1/2">Compliance: {String(currentAgent.attributes[0].value)}</p>
-      <p className="text-center text-gray-200 w-1/2">Creativity: {String(currentAgent.attributes[1].value)}</p>
-      <p className="text-center text-gray-200 w-1/2">Unhingedness: {String(currentAgent.attributes[2].value)}</p>
-      <p className="text-center text-gray-200 w-1/2">Motivation: {String(currentAgent.attributes[3].value)}</p>
-      <p className="text-center text-gray-200 w-1/2">{String(currentAgent.description)}</p>
-      <p className="text-center text-gray-200 w-1/2">Personality: {String(currentAgent.attributes[4].value)}</p>
+      <img src={currentAgent.image} />
+      <p className="text-center text-gray-200 w-1/2">{currentAgent.name}</p>
+      <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Unhingedness: {currentAgent.attributes[2].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Motivation: {currentAgent.attributes[3].value}</p>
+      <p className="text-center text-gray-200 w-1/2">{currentAgent.description}</p>
+      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
