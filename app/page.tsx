@@ -25,7 +25,14 @@ export default function Home() {
   const { data: hash, writeContract, isPending } = useWriteContract();
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
-  const [currentAgent, setCurrentAgent] = useState(null);
+  const [agentImage, setAgentImage] = useState();
+  const [agentName, setAgentName] = useState();
+  const [agentCompliance, setAgentCompliance] = useState();
+  const [agentCreativity, setAgentCreativity] = useState();
+  const [agentUnhingedness, setAgentUnhingedness] = useState();
+  const [agentMotivation, setAgentMotivation] = useState();
+  const [agentDescription, setAgentDescription] = useState();
+  const [agentPersonality, setAgentPersonality] = useState();
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
@@ -46,7 +53,22 @@ export default function Home() {
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
       const responseJson = await response.json();
       const _agentResult = responseJson[Number(_currentAgent)-1];
-      setCurrentAgent(_agentResult);
+      const _agentImage = _agentResult.image;
+      const _agentName = _agentResult.name;
+      const _agentDescription = _agentResult.description;
+      const _agentCompliance = _agentResult.attributes[0].value;
+      const _agentCreativity = _agentResult.attributes[1].value;
+      const _agentUnhingedness = _agentResult.attributes[2].value;
+      const _agentMotivation = _agentResult.attributes[3].value;
+      const _agentPersonality = _agentResult.attributes[4].value;
+      setAgentImage(_agentImage);
+      setAgentName(_agentName);
+      setAgentDescription(_agentDescription);
+      setAgentCompliance(_agentCompliance);
+      setAgentCreativity(_agentCreativity);
+      setAgentUnhingedness(_agentUnhingedness);
+      setAgentMotivation(_agentMotivation);
+      setAgentPersonality(_agentPersonality);
     }
   }
 
@@ -106,14 +128,14 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
-     {currentAgent && <><img src={currentAgent.image} alt="agentImage" />
-      <p className="text-center text-gray-200 w-1/2">Name: {currentAgent.name}</p>
-      <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Unhingedness: {currentAgent.attributes[2].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Motivation: {currentAgent.attributes[3].value}</p>
-      <p className="text-center text-gray-200 w-1/2">Description: {currentAgent.description}</p>
-      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p></>}
+      <img src={agentImage} alt="agentImage" />
+      <p className="text-center text-gray-200 w-1/2">Name: {agentName}</p>
+      <p className="text-center text-gray-200 w-1/2">Compliance: {agentCompliance}</p>
+      <p className="text-center text-gray-200 w-1/2">Creativity: {agentCreativity}</p>
+      <p className="text-center text-gray-200 w-1/2">Unhingedness: {agentUnhingedness}</p>
+      <p className="text-center text-gray-200 w-1/2">Motivation: {agentMotivation}</p>
+      <p className="text-center text-gray-200 w-1/2">Description: {agentDescription}</p>
+      <p className="text-center text-gray-200 w-1/2">Personality: {agentPersonality}</p>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
