@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAgent } from "./hooks/useAgent";
 import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
 import {useWriteContract} from 'wagmi';
+import Image from 'next/image';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import reaper from './assets/img/reaper.png';
@@ -104,7 +105,7 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
-      <img src={currentAgent.image as string} />
+      <Image src={currentAgent.image} alt="agentImage" />
       <p className="text-center text-gray-200 w-1/2">{currentAgent.name}</p>
       <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
       <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
