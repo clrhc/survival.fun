@@ -25,7 +25,7 @@ export default function Home() {
   const { data: hash, writeContract, isPending } = useWriteContract();
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
-  const [currentAgent, setCurrentAgent] = useState(null);
+  const [currentAgent, setCurrentAgent] = useState();
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
