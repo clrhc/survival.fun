@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { useAgent } from "./hooks/useAgent";
 import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
 import {useWriteContract} from 'wagmi';
-import Image from 'next/image';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import reaper from './assets/img/reaper.png';
@@ -20,12 +19,19 @@ import agents from './abi/agents.json';
  */
 export default function Home() {
 
+  interface Agent {
+    image: any;
+    name: string;
+    attributes: string;
+    description: string;
+  }
+
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
-  const [currentAgent, setCurrentAgent] = useState();
+  const [currentAgent, setCurrentAgent] = useState<Agent | null>(null);
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
@@ -44,7 +50,7 @@ export default function Home() {
     if(isConnected){
       const _currentAgent = await agentsContract.currentAgent(address);
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
-      const responseJson = await response.json();
+      const responseJson: Agent[] = await response.json();
       setCurrentAgent(responseJson[Number(_currentAgent)-1]);
     }
   }
@@ -105,14 +111,14 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
-      <Image src={currentAgent.image} alt="agentImage" />
-      <p className="text-center text-gray-200 w-1/2">{currentAgent.name}</p>
+      {currentAgent && <><img src={currentAgent.image} alt="agentImage" />
+      <p className="text-center text-gray-200 w-1/2">Name: {currentAgent.name}</p>
       <p className="text-center text-gray-200 w-1/2">Compliance: {currentAgent.attributes[0].value}</p>
       <p className="text-center text-gray-200 w-1/2">Creativity: {currentAgent.attributes[1].value}</p>
       <p className="text-center text-gray-200 w-1/2">Unhingedness: {currentAgent.attributes[2].value}</p>
       <p className="text-center text-gray-200 w-1/2">Motivation: {currentAgent.attributes[3].value}</p>
       <p className="text-center text-gray-200 w-1/2">Description: {currentAgent.description}</p>
-      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p>
+      <p className="text-center text-gray-200 w-1/2">Personality: {currentAgent.attributes[4].value}</p></>}
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
