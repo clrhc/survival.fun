@@ -45,7 +45,8 @@ export default function Home() {
       const _currentAgent = await agentsContract.currentAgent(address);
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
       const responseJson = await response.json();
-      setCurrentAgent(responseJson[Number(_currentAgent)-1]);
+      const _agentResult = responseJson[Number(_currentAgent)-1];
+      setCurrentAgent(_agentResult);
     }
   }
 
