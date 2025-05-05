@@ -2,7 +2,6 @@ import { AgentRequest, AgentResponse } from "@/app/types/api";
 import { NextResponse } from "next/server";
 import { createAgent } from "./create-agent";
 import { Message, generateId, generateText } from "ai";
-import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
 
 const messages: Message[] = [];
 

@@ -149,7 +149,7 @@ export default function Home() {
      </>}
      {play === 3 && <>
      {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {scenario.length === 0 ? <>
-            <p className="text-center text-gray-500">Let's Seal Your Fate</p>
+            <p className="text-center text-gray-500">Lets Seal Your Fate</p>
           </> : <>
             {scenario.map((scenario, index) => (
               <div
