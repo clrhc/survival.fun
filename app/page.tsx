@@ -90,11 +90,13 @@ export default function Home() {
     await sendMessage(message);
   };
 
-  const onBeginScenario = async (personality: string) => {
+  const onBeginScenario = async () => {
+    const personality = agentPersonality;
     await beginScenario(personality);
   }
 
-  const onBeginCollaborate = async (personality: string) => {
+  const onBeginCollaborate = async () => {
+    const personality = agentPersonality;
     await beginCollaborate(personality);
   }
 
@@ -144,7 +146,7 @@ export default function Home() {
       <p className="text-center text-gray-200 w-1/2">Motivation: {agentMotivation}</p>
       <p className="text-center text-gray-200 w-1/2">Description: {agentDescription}</p>
       <p className="text-center text-gray-200 w-1/2">Personality: {agentPersonality}</p>
-      <button onClick={() => {setPlay(3); onBeginScenario(agentPersonality);}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Begin Scenario</button>
+      <button onClick={() => {setPlay(3); onBeginScenario();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Begin Scenario</button>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
@@ -173,7 +175,7 @@ export default function Home() {
                 </span>
               </div>
             ))}
-          <button onClick={() => {setPlay(4); onBeginCollaborate(agentPersonality);}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
+          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
      {play === 4 && <>
      <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
