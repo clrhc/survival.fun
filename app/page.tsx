@@ -90,11 +90,11 @@ export default function Home() {
     await sendMessage(message);
   };
 
-  const onBeginScenario = async (personality) => {
+  const onBeginScenario = async (personality: string) => {
     await beginScenario(personality);
   }
 
-  const onBeginCollaborate = async (personality) => {
+  const onBeginCollaborate = async (personality: string) => {
     await beginCollaborate(personality);
   }
 
