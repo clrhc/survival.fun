@@ -48,6 +48,7 @@ async function messageAgent(userMessage: string): Promise<string | null> {
  */
 export function useAgent() {
   const [messages, setMessages] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
+  const [scenario, setScenario] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 
   /**
@@ -70,5 +71,25 @@ export function useAgent() {
     setIsThinking(false);
   };
 
-  return { messages, sendMessage, isThinking };
+  const beginScenario = async (personality: string) => {
+    setIsThinking(true);
+    const responseMessage = await messageAgent(`Add ${personality} to the agents system, Begin The Scenario`);
+    if(responseMessage){
+      setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
+    }
+
+     setIsThinking(false);
+  }
+
+  const beginCollaborate = async (personality: string) => {
+    setIsThinking(true);
+    const responseMessage = await messageAgent(`Add ${personality} to the agents system, What Do You Think I Should Do?`);
+     if (responseMessage) {
+      setMessages(prev => [...prev, { text: responseMessage, sender: "agent" }]);
+    }
+
+    setIsThinking(false);
+  }
+
+  return { messages, sendMessage, isThinking, beginScenario, beginCollaborate, scenario };
 }

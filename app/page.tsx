@@ -36,7 +36,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
-  const { messages, sendMessage, isThinking } = useAgent();
+  const { messages, sendMessage, isThinking, beginScenario, scenario, beginCollaborate } = useAgent();
 
   // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -90,6 +90,14 @@ export default function Home() {
     await sendMessage(message);
   };
 
+  const onBeginScenario = async (personality) => {
+    await beginScenario(personality);
+  }
+
+  const onBeginCollaborate = async (personality) => {
+    await beginCollaborate(personality);
+  }
+
   const checkPlay = async () => {
     if(isConnected){
     if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{setPlay(1);}
@@ -136,9 +144,37 @@ export default function Home() {
       <p className="text-center text-gray-200 w-1/2">Motivation: {agentMotivation}</p>
       <p className="text-center text-gray-200 w-1/2">Description: {agentDescription}</p>
       <p className="text-center text-gray-200 w-1/2">Personality: {agentPersonality}</p>
+      <button onClick={() => {setPlay(3); onBeginScenario(agentPersonality);}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Begin Scenario</button>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 3 && <>
+     {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {scenario.length === 0 ? <>
+            <p className="text-center text-gray-500">Let's Seal Your Fate</p>
+          </> : <>
+            {scenario.map((scenario, index) => (
+              <div
+                key={index}
+              >
+              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {scenario.text}
+                </ReactMarkdown>
+                </span>
+              </div>
+            ))}
+          <button onClick={() => {setPlay(4); onBeginCollaborate(agentPersonality);}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
+     {play === 4 && <>
      <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
         <div className="flex-grow overflow-y-auto space-y-3 p-2">
