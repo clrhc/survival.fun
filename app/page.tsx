@@ -32,7 +32,7 @@ export default function Home() {
   const [agentUnhingedness, setAgentUnhingedness] = useState();
   const [agentMotivation, setAgentMotivation] = useState();
   const [agentDescription, setAgentDescription] = useState();
-  const [agentPersonality, setAgentPersonality] = useState();
+  const [agentPersonality, setAgentPersonality] = useState("");
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
@@ -68,7 +68,7 @@ export default function Home() {
       setAgentCreativity(_agentCreativity);
       setAgentUnhingedness(_agentUnhingedness);
       setAgentMotivation(_agentMotivation);
-      setAgentPersonality(_agentPersonality);
+      setAgentPersonality(String(_agentPersonality));
     }
   }
 
