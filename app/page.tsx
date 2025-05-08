@@ -295,7 +295,7 @@ export default function Home() {
            {play === 5 && <>
       {showResult === 0 ? <>
         <img src={reaper.src} />
-        <p>I have seen what happens and {agentName}'s fate is sealed</p>
+        <p>I have seen what happens and {agentName}&#39;s fate is sealed</p>
            <button
             onClick={() => setShowResult(1)}
             className={`px-6 py-2 rounded-full font-semibold transition-all bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md`}
