@@ -53,15 +53,7 @@ export default function Home() {
     if(isConnected){
       const _currentAgent = Number(await agentsContract.currentAgent(address));
       if(_currentAgent === 0){
-      setAgentJson();
-      setAgentImage();
-      setAgentName();
-      setAgentDescription();
-      setAgentCompliance();
-      setAgentCreativity();
-      setAgentUnhingedness();
-      setAgentMotivation();
-      setAgentPersonality();
+
       }else{
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
       const responseJson = await response.json();
