@@ -26,7 +26,7 @@ export default function Home() {
   const { open } = useAppKit();
   const { address, isConnected } = useAppKitAccount();
   const [agentImage, setAgentImage] = useState();
-  const [agentName, setAgentName] = useState();
+  const [agentName, setAgentName] = useState("");
   const [agentCompliance, setAgentCompliance] = useState();
   const [agentCreativity, setAgentCreativity] = useState();
   const [agentUnhingedness, setAgentUnhingedness] = useState();
