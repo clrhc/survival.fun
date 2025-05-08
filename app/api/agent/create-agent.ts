@@ -1,9 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { getVercelAITools } from "@coinbase/agentkit-vercel-ai-sdk";
 import { prepareAgentkitAndWalletProvider } from "./prepare-agentkit";
-import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
-import Data from '../../data.json';
-import agents from '../../abi/agents.json';
 
 
 /**
