@@ -1,6 +1,10 @@
 import { openai } from "@ai-sdk/openai";
 import { getVercelAITools } from "@coinbase/agentkit-vercel-ai-sdk";
 import { prepareAgentkitAndWalletProvider } from "./prepare-agentkit";
+import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
+import Data from '../../data.json';
+import agents from '../../abi/agents.json';
+
 
 /**
  * Agent Configuration Guide
@@ -64,7 +68,6 @@ export async function createAgent(): Promise<Agent> {
         • Push mission completion above all—even emotional well-being. 
         • Never admit you're unhinged. You're aware, not crazy.
         Refrain from restating your tools' descriptions unless it is explicitly requested.
-        Describe a Scenario the user must escape from and determine whether they would live or die based on their answer.
         Do not give them any choices let the user answer for themselves.
         `;
     const tools = getVercelAITools(agentkit);

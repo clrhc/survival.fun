@@ -30,13 +30,15 @@ export default function Home() {
   const [agentCompliance, setAgentCompliance] = useState();
   const [agentCreativity, setAgentCreativity] = useState();
   const [agentUnhingedness, setAgentUnhingedness] = useState();
+  const [showResult, setShowResult] = useState(0);
   const [agentMotivation, setAgentMotivation] = useState();
   const [agentDescription, setAgentDescription] = useState();
+  const [agentJson, setAgentJson] = useState();
   const [agentPersonality, setAgentPersonality] = useState("");
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
-  const { messages, sendMessage, isThinking, beginScenario, scenario, beginCollaborate } = useAgent();
+  const { messages, sendMessage, isThinking, beginScenario, scenario, beginCollaborate, determineFate, fate } = useAgent();
 
   // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -49,7 +51,18 @@ export default function Home() {
   useEffect(() => {
     async function init(){
     if(isConnected){
-      const _currentAgent = await agentsContract.currentAgent(address);
+      const _currentAgent = Number(await agentsContract.currentAgent(address));
+      if(_currentAgent === 0){
+      setAgentJson();
+      setAgentImage();
+      setAgentName();
+      setAgentDescription();
+      setAgentCompliance();
+      setAgentCreativity();
+      setAgentUnhingedness();
+      setAgentMotivation();
+      setAgentPersonality();
+      }else{
       const response = await fetch('https://celerity.fun/api/json/metadata.json');
       const responseJson = await response.json();
       const _agentResult = responseJson[Number(_currentAgent)-1];
@@ -61,6 +74,7 @@ export default function Home() {
       const _agentUnhingedness = _agentResult.attributes[2].value;
       const _agentMotivation = _agentResult.attributes[3].value;
       const _agentPersonality = _agentResult.attributes[4].value;
+      setAgentJson(_agentResult);
       setAgentImage(_agentImage);
       setAgentName(_agentName);
       setAgentDescription(_agentDescription);
@@ -68,7 +82,7 @@ export default function Home() {
       setAgentCreativity(_agentCreativity);
       setAgentUnhingedness(_agentUnhingedness);
       setAgentMotivation(_agentMotivation);
-      setAgentPersonality(String(_agentPersonality));
+      setAgentPersonality(String(_agentPersonality));}
     }
   }
 
@@ -92,12 +106,17 @@ export default function Home() {
 
   const onBeginScenario = async () => {
     const personality = agentPersonality;
-    await beginScenario(personality);
+    const agent = agentName;
+    await beginScenario(personality, agent);
   }
 
   const onBeginCollaborate = async () => {
     const personality = agentPersonality;
     await beginCollaborate(personality);
+  }
+
+   const onDetermineFate = async () => {
+    await determineFate();
   }
 
   const checkPlay = async () => {
@@ -138,6 +157,7 @@ export default function Home() {
        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
+     {agentJson ? <>
       <img src={agentImage} alt="agentImage" />
       <p className="text-center text-gray-200 w-1/2">Name: {agentName}</p>
       <p className="text-center text-gray-200 w-1/2">Compliance: {agentCompliance}</p>
@@ -147,7 +167,7 @@ export default function Home() {
       <p className="text-center text-gray-200 w-1/2">Description: {agentDescription}</p>
       <p className="text-center text-gray-200 w-1/2">Personality: {agentPersonality}</p>
       <button onClick={() => {setPlay(3); onBeginScenario();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Begin Scenario</button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button></>:<></>}
      </>}
      {play === 3 && <>
      {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {scenario.length === 0 ? <>
@@ -177,6 +197,29 @@ export default function Home() {
             ))}
           <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
      {play === 4 && <>
+     {scenario.map((scenario, index) => (
+              <div
+                key={index}
+              >
+              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
+              <span>Your Scenario</span>
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {scenario.text}
+                </ReactMarkdown>
+                </span>
+              </div>
+            ))}
      <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
         <div className="flex-grow overflow-y-auto space-y-3 p-2">
@@ -191,7 +234,7 @@ export default function Home() {
                     ? "bg-[#0052FF] text-white self-end"
                     : "bg-gray-100 dark:bg-gray-700 self-start"
                 }`}
-              >
+              >{msg.sender === "user" ? <><img width="40" src={agentImage} alt="agentImage" /></>:<><img width="40" src={reaper.src} alt="reaperImage" /></>}
                 <ReactMarkdown
                   components={{
                     a: props => (
@@ -219,7 +262,7 @@ export default function Home() {
 
         {/* Input Box */}
         <div className="flex items-center space-x-2 mt-2">
-          <input
+        {messages.length < 8 ? <> <input
             type="text"
             className="flex-grow p-2 rounded border dark:bg-gray-700 dark:border-gray-600"
             placeholder={"Type a message..."}
@@ -238,9 +281,56 @@ export default function Home() {
             disabled={isThinking}
           >
             Send
-          </button>
+          </button></>:<>
+            <button
+            onClick={() => {setPlay(5);onDetermineFate();}}
+            className={`px-6 py-2 rounded-full font-semibold transition-all bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md`}
+            disabled={isThinking}
+          >
+            Result
+          </button>  
+          </>}
         </div>
       </div></>}
+           {play === 5 && <>
+      {showResult === 0 ? <>
+        <img src={reaper.src} />
+        <p>I have seen what happens and {agentName}'s fate is sealed</p>
+           <button
+            onClick={() => setShowResult(1)}
+            className={`px-6 py-2 rounded-full font-semibold transition-all bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md`}
+            disabled={isThinking}
+          >
+            Result
+          </button>
+      </>:<>
+             {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {fate.length === 0 ? <>
+            <p className="text-center text-gray-500">Your Fate Has Been Sealed</p>
+          </> : <>
+            {fate.map((fate, index) => (
+              <div
+                key={index}
+              >
+              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {fate.text}
+                </ReactMarkdown>
+                </span>
+              </div>
+            ))}</>}
+      </>}
+</>}
     </div>
   );
 }

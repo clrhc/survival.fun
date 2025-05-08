@@ -49,6 +49,7 @@ async function messageAgent(userMessage: string): Promise<string | null> {
 export function useAgent() {
   const [messages, setMessages] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
   const [scenario, setScenario] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
+  const [fate, setFate] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 
   /**
@@ -71,9 +72,9 @@ export function useAgent() {
     setIsThinking(false);
   };
 
-  const beginScenario = async (personality: string) => {
+  const beginScenario = async (personality: string, agentName: string) => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Add ${personality} to the agents system, Begin The Scenario`);
+    const responseMessage = await messageAgent(`Add ${personality} to the agents system, Begin The Scenario with ${agentName} is. Describe a random scenario the agent must escape from and keep the text less than 10 words, do not add a question at the end of the scenario or an extra sentence explaining they have to escape or survive, add '...' to the end of the scenario with no extra text after.`);
     if(responseMessage){
       setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
@@ -82,8 +83,9 @@ export function useAgent() {
   }
 
   const beginCollaborate = async (personality: string) => {
+    setMessages(prev => [...prev, { text: 'What Do You Think I Should Do?', sender: "user" }]);
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Add ${personality} to the agents system, What Do You Think I Should Do?`);
+    const responseMessage = await messageAgent(`Answer with the agent personality given: ${personality}, give suggestions to the scenario but keep it short and question the users actions, never let the user know the result or what happens if they do something`);
      if (responseMessage) {
       setMessages(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
@@ -91,5 +93,15 @@ export function useAgent() {
     setIsThinking(false);
   }
 
-  return { messages, sendMessage, isThinking, beginScenario, beginCollaborate, scenario };
+  const determineFate = async () => {
+    setIsThinking(true);
+    const responseMessage = await messageAgent(`with the given responses from the user, give a result to the scenario and go over how it played out for the user and whether they survived or died. do not continue the scenario further`);
+     if (responseMessage) {
+      setFate(prev => [...prev, { text: responseMessage, sender: "agent" }]);
+    }
+
+    setIsThinking(false);
+  }
+
+  return { messages, sendMessage, isThinking, beginScenario, beginCollaborate, scenario, determineFate, fate };
 }
