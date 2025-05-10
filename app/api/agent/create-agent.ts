@@ -49,7 +49,7 @@ export async function createAgent(): Promise<Agent> {
     // Initialize LLM: https://platform.openai.com/docs/models#gpt-4o
     const model = openai("gpt-4o-mini");
 
-    const { agentkit, walletProvider } = await prepareAgentkitAndWalletProvider();
+    const { agentkit } = await prepareAgentkitAndWalletProvider();
 
     // Initialize Agent
     const system = `
