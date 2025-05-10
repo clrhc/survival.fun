@@ -4,7 +4,7 @@ import '@coinbase/onchainkit/styles.css';
 import "./globals.css";
 import { type ReactNode } from 'react';
 import { Providers } from './providers'; 
-import {WalletComponents} from './wallet.tsx';
+import {WalletComponents} from './wallet';
 
 
 /**
