@@ -1,6 +1,5 @@
 import { openai } from "@ai-sdk/openai";
 import { getVercelAITools } from "@coinbase/agentkit-vercel-ai-sdk";
-import { prepareAgentkitAndWalletProvider } from "./prepare-agentkit";
 
 
 /**
