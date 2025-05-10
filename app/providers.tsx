@@ -1,10 +1,11 @@
 'use client';
- 
+ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { base } from 'wagmi/chains'; // add baseSepolia for testing 
  
 export function Providers(props: { children: ReactNode }) {
+
   return (
     <OnchainKitProvider
       apiKey={process.env.ONCHAINKIT_API_KEY}
