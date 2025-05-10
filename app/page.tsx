@@ -29,11 +29,11 @@ export default function Home() {
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
-  const [agentCompliance, setAgentCompliance] = useState();
-  const [agentCreativity, setAgentCreativity] = useState();
-  const [agentUnhingedness, setAgentUnhingedness] = useState();
+  const [agentCompliance, setAgentCompliance] = useState("");
+  const [agentCreativity, setAgentCreativity] = useState("");
+  const [agentUnhingedness, setAgentUnhingedness] = useState("");
   const [showResult, setShowResult] = useState(0);
-  const [agentMotivation, setAgentMotivation] = useState();
+  const [agentMotivation, setAgentMotivation] = useState("");
   const [agentDescription, setAgentDescription] = useState();
   const [agentJson, setAgentJson] = useState();
   const [agentPersonality, setAgentPersonality] = useState("");
