@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useAgent } from "./hooks/useAgent";
-import { useAppKitAccount, useAppKit } from "@reown/appkit/react";
-import {useWriteContract} from 'wagmi';
+import {useWriteContract, useAccount} from 'wagmi';
+import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import reaper from './assets/img/reaper.png';
+import userImage from './assets/img/user.png';
 import loadingGif from './assets/img/loading.gif';
 import Data from './data.json';
 import {ethers} from 'ethers';
@@ -23,8 +24,9 @@ export default function Home() {
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
-  const { open } = useAppKit();
-  const { address, isConnected } = useAppKitAccount();
+  const account = useAccount();
+  const isConnected = account.isConnected;
+  const address = account.address;
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
   const [agentCompliance, setAgentCompliance] = useState();
@@ -99,7 +101,11 @@ export default function Home() {
   const onBeginScenario = async () => {
     const personality = agentPersonality;
     const agent = agentName;
-    await beginScenario(personality, agent);
+    const compliance = agentCompliance;
+    const creativity = agentCreativity;
+    const unhingedness = agentUnhingedness;
+    const motivation = agentMotivation;
+    await beginScenario(personality, compliance, creativity, unhingedness, motivation, agent);
   }
 
   const onBeginCollaborate = async () => {
@@ -115,7 +121,7 @@ export default function Home() {
     if(isConnected){
     if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{setPlay(1);}
     }else{
-      open();
+    
     }
   }
 
@@ -130,7 +136,7 @@ export default function Home() {
         }catch(error){console.log(error)}
         }
       }else{
-        open();
+      
      }
    }
 
@@ -139,7 +145,7 @@ export default function Home() {
      {play === 0 && <>
      <img src={reaper.src} />
      {isConnected ? <><button onClick={() => checkPlay()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Play</button>
-     </>:<><button onClick={() => open()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Connect</button></>}
+     </>:<><ConnectWallet className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" /></>}
      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button></>}
      {play === 1 && <>
        <img src={reaper.src} />
@@ -194,7 +200,6 @@ export default function Home() {
                 key={index}
               >
               <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
-              <span>Your Scenario</span>
                 <ReactMarkdown
                   components={{
                     a: props => (
@@ -226,7 +231,7 @@ export default function Home() {
                     ? "bg-[#0052FF] text-white self-end"
                     : "bg-gray-100 dark:bg-gray-700 self-start"
                 }`}
-              >{msg.sender === "user" ? <><img width="40" src={agentImage} alt="agentImage" /></>:<><img width="40" src={reaper.src} alt="reaperImage" /></>}
+              >{msg.sender === "user" ? <><img width="40" src={userImage.src} alt="userImage" /></>:<><img width="40" src={agentImage} alt="agentImage" /></>}
                 <ReactMarkdown
                   components={{
                     a: props => (

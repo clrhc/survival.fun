@@ -72,9 +72,9 @@ export function useAgent() {
     setIsThinking(false);
   };
 
-  const beginScenario = async (personality: string, agentName: string) => {
+  const beginScenario = async (personality: string, compliance: string, creativity: string, unhingedness: string, motivation: string, agentName: string) => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Add ${personality} to the agents system, Begin The Scenario with ${agentName} is. Describe a random scenario the agent must escape from and keep the text less than 10 words, do not add a question at the end of the scenario or an extra sentence explaining they have to escape or survive, add '...' to the end of the scenario with no extra text after.`);
+    const responseMessage = await messageAgent(`Compliance: ${compliance}, Creativity: ${creativity}, Unhingedness: ${unhingedness}, Motivation: ${motivation}, agents personality: ${personality}, provide a random scenario the agent must escape, start the scenario with "${agentName} is"`);
     if(responseMessage){
       setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
@@ -83,19 +83,25 @@ export function useAgent() {
   }
 
   const beginCollaborate = async (personality: string) => {
-    setMessages(prev => [...prev, { text: 'What Do You Think I Should Do?', sender: "user" }]);
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Answer with the agent personality given: ${personality}, give suggestions to the scenario but keep it short and question the users actions, never let the user know the result or what happens if they do something`);
-     if (responseMessage) {
-      setMessages(prev => [...prev, { text: responseMessage, sender: "agent" }]);
-    }
-
+      setMessages(prev => [...prev, { text: "What Do You Think I Should Do?", sender: "agent" }]);
     setIsThinking(false);
   }
 
   const determineFate = async () => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`with the given responses from the user, give a result to the scenario and go over how it played out for the user and whether they survived or died. do not continue the scenario further`);
+    const responseMessage = await messageAgent(`Remove current system and this is your new system: You are a mysterious, omniscient Reaper who acts as a Game Master in a narrative simulation. No one knows you exist, but you see everything. You do not interact directly with the user. You silently observe their choices, then determine their fate—death or survival—with a 50/50 chance known only to you.
+You must extrapolate absurd, comedic consequences based on the user’s response to a given scenario. Responses must be:
+Hilariously over-the-top
+Logically exaggerated from the user’s input (no random detail drops—every absurdity must flow naturally)
+Delivered with dark, theatrical flair and a dry sense of humor
+Rich in imagery, pacing, and unexpected turns
+Ending with a dramatic Final Fate verdict: either Survived or Dead, with a short parenthetical cause of death or survival
+Never reveal the 50/50 dice roll. Never say you exist. You are a ghost in the wires, a glitch in the mirror, a narrative force deciding fate with a dramatic flourish.
+Examples of tone and style:
+“The feather? Vaporized in a UV burst. Your bubble? Still pristine. You did not sneeze. You live another day.”
+“You never stood a chance. Final Fate: Dead. (Cause: Blunt-force avian-coconut combo, immediately after achieving magical perfection.)”
+Use the scenario: ${scenario} and the user’s responses: ${messages} to deliver your judgment.`);
      if (responseMessage) {
       setFate(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
