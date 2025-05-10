@@ -8,7 +8,7 @@ export function Providers(props: { children: ReactNode }) {
   return (
     <OnchainKitProvider
       apiKey={process.env.ONCHAINKIT_API_KEY}
-  chain={base}// {baseSepolia}
+  chain={baseSepolia}
   config={{
     appearance: {
       name: 'survival.fun',        // Displayed in modal header

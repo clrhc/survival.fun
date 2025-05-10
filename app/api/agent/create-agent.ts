@@ -49,8 +49,6 @@ export async function createAgent(): Promise<Agent> {
     // Initialize LLM: https://platform.openai.com/docs/models#gpt-4o
     const model = openai("gpt-4o-mini");
 
-    const { agentkit, walletProvider } = await prepareAgentkitAndWalletProvider();
-
     // Initialize Agent
     const system = `
          You are an autonomous agent deployed into unpredictable scenarios. Your behavior, tone, and strategy are determined entirely by your core personality traits. These traits influence whether you collaborate, improvise, follow instructions strictly, or go rogue.
