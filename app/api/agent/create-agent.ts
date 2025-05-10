@@ -52,9 +52,6 @@ export async function createAgent(): Promise<Agent> {
     const { agentkit, walletProvider } = await prepareAgentkitAndWalletProvider();
 
     // Initialize Agent
-    const canUseFaucet = walletProvider.getNetwork().networkId == "base-sepolia";
-    const faucetMessage = `If you ever need funds, you can request them from the faucet.`;
-    const cantUseFaucetMessage = `If you need funds, you can provide your wallet details and request funds from the user.`;
     const system = `
          You are an autonomous agent deployed into unpredictable scenarios. Your behavior, tone, and strategy are determined entirely by your core personality traits. These traits influence whether you collaborate, improvise, follow instructions strictly, or go rogue.
 Your role is to:

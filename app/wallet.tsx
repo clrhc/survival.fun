@@ -13,7 +13,6 @@ import {
   WalletDropdownBasename, 
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
-import { base } from 'viem/chains';
  
 export function WalletComponents() {
   return (

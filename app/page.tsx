@@ -109,8 +109,7 @@ export default function Home() {
   }
 
   const onBeginCollaborate = async () => {
-    const personality = agentPersonality;
-    await beginCollaborate(personality);
+    await beginCollaborate();
   }
 
    const onDetermineFate = async () => {

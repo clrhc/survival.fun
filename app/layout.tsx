@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import survivalLogo from './assets/img/survivorLogo.png';
 import '@coinbase/onchainkit/styles.css';
 import "./globals.css";
-import { headers } from 'next/headers';
 import { type ReactNode } from 'react';
-import { cookieToInitialState } from 'wagmi';
 import { Providers } from './providers'; 
 import {WalletComponents} from './wallet.tsx';
 

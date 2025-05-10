@@ -82,7 +82,7 @@ export function useAgent() {
      setIsThinking(false);
   }
 
-  const beginCollaborate = async (personality: string) => {
+  const beginCollaborate = async () => {
     setIsThinking(true);
       setMessages(prev => [...prev, { text: "What Do You Think I Should Do?", sender: "agent" }]);
     setIsThinking(false);
