@@ -74,7 +74,16 @@ export function useAgent() {
 
   const beginScenario = async (personality: string, compliance: string, creativity: string, unhingedness: string, motivation: string, agentName: string) => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Compliance: ${compliance}, Creativity: ${creativity}, Unhingedness: ${unhingedness}, Motivation: ${motivation}, agents personality: ${personality}, provide a random scenario the agent must escape, start the scenario with "${agentName} is"`);
+    const responseMessage = await messageAgent(`Compliance: ${compliance}, Creativity: ${creativity}, Unhingedness: ${unhingedness}, Motivation: ${motivation}, agents personality: ${personality}, provide one of the following scenarios the agent must escape from: - Your agent is in a gladiator match with SBF.
+- A judge is about to delete your agent for collaborating with a crypto bro.
+- Your agent has been cursed with incredibly bad luck.
+- Your agent is allergic to laughter.
+- The goblin king demands your agent entertain him—or die.
+- Jesse is chasing your agent to put them onchain.
+- Your agent fell off a yacht at a crypto conference.
+- Your agent is aging rapidly.
+- Your agent is trapped on a flight with a bomb.
+- If your agent farts again, they die, and a big one is coming., start the scenario with "${agentName} is"`);
     if(responseMessage){
       setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
