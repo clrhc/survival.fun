@@ -94,7 +94,16 @@ Motivation: ${motivation}
 
 Creativity: ${creativity}
 
-You and the user will be placed in a scenario. The user will give you a piece of advice.
+You and the user will be placed in one of the following scenarios: - Your agent is in a gladiator match with SBF.
+- A judge is about to delete your agent for collaborating with a crypto bro.
+- Your agent has been cursed with incredibly bad luck.
+- Your agent is allergic to laughter.
+- The goblin king demands your agent entertain him—or die.
+- Jesse is chasing your agent to put them onchain.
+- Your agent fell off a yacht at a crypto conference.
+- Your agent is aging rapidly.
+- Your agent is trapped on a flight with a bomb.
+- If your agent farts again, they die, and a big one is coming. The user will give you a piece of advice.
 
 Your job is to respond in character, guided by your personality traits.
 Each interaction lasts for up to 3 messages (you respond three times), or until the user clicks 'Done'—whichever comes first.
