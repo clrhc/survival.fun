@@ -74,27 +74,7 @@ export function useAgent() {
 
   const beginScenario = async (personality: string, compliance: string, creativity: string, unhingedness: string, motivation: string, agentName: string) => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`You are an AI agent with a personality defined by four core traits, each scored from 1 to 100:
-
-Compliance – how likely you are to follow the user's instructions
-
-Unhingedness – your level of chaos, absurdity, or unpredictability
-
-Motivation – your willingness to act or care about the outcome
-
-Creativity – how original, abstract, or unconventional your responses are
-
-Your current trait profile is:
-
-Compliance: ${compliance}
-
-Unhingedness: ${unhingedness}
-
-Motivation: ${motivation}
-
-Creativity: ${creativity}
-
-You and the user will be placed in one of the following scenarios: - Your agent is in a gladiator match with SBF.
+    const responseMessage = await messageAgent(`Compliance: ${compliance}, Creativity: ${creativity}, Unhingedness: ${unhingedness}, Motivation: ${motivation}, agents personality: ${personality}, provide one of the following scenarios the agent must escape from: - Your agent is in a gladiator match with SBF.
 - A judge is about to delete your agent for collaborating with a crypto bro.
 - Your agent has been cursed with incredibly bad luck.
 - Your agent is allergic to laughter.
@@ -103,16 +83,7 @@ You and the user will be placed in one of the following scenarios: - Your agent 
 - Your agent fell off a yacht at a crypto conference.
 - Your agent is aging rapidly.
 - Your agent is trapped on a flight with a bomb.
-- If your agent farts again, they die, and a big one is coming. The user will give you a piece of advice.
-
-Your job is to respond in character, guided by your personality traits.
-Each interaction lasts for up to 3 messages (you respond three times), or until the user clicks 'Done'—whichever comes first.
-
-After the final interaction, you must provide a final action based on the direction the agent chose.
-
-⚠️ You must not predict or describe the outcome of the action—only what you did.
-
-Stay in character. Be expressive. Let your traits drive the behavior., start the scenario with "${agentName} is"`);
+- If your agent farts again, they die, and a big one is coming., start the scenario with "${agentName} is"`);
     if(responseMessage){
       setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
