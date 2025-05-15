@@ -181,7 +181,7 @@ body {
 
 .adviceBox{
   color: #333;
-  display: grid;
+  display: block;
   justify-content: center;
   margin: 0 auto;
   font-weight: 700;
