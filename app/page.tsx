@@ -127,7 +127,7 @@ export default function Home() {
   }
 
    const onDetermineFate = async () => {
-    await determineFate();
+    await determineFate(scenario, messages);
   }
 
   const checkPlay = async () => {
