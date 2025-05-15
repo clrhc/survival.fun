@@ -127,7 +127,7 @@ export default function Home() {
   }
 
    const onDetermineFate = async () => {
-    let messagesArray = [];
+    const messagesArray = [];
     for(let i = 0; i < messages.length; i++){
       messagesArray.push(messages[i].text);
     }
