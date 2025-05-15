@@ -127,7 +127,11 @@ export default function Home() {
   }
 
    const onDetermineFate = async () => {
-    await determineFate(scenario, agentName);
+    let messagesArray = [];
+    for(let i = 0; i < messages.length; i++){
+      messagesArray.push(messages[i].text);
+    }
+   await determineFate(scenario, agentName, messagesArray);
   }
 
   const checkPlay = async () => {
@@ -293,7 +297,7 @@ export default function Home() {
           </button></div></>:<>
           <div className="resultDiv absolute bottom-0">
             <button
-            onClick={() => {setPlay(5);onDetermineFate();}}
+            onClick={() => {setPlay(5); onDetermineFate();}}
              className="resultButton relative bottom-5"
             disabled={isThinking}
           >
