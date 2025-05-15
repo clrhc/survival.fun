@@ -165,7 +165,8 @@ export default function Home() {
       ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
       ${play === 2 && "bg-[url(./assets/img/mintStatsBg.png)]"}
       ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
-      ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}`}>
+      ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
+      ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
         <header className="mainLogo py-6 flex items-center justify-between relative">
@@ -208,7 +209,7 @@ export default function Home() {
                   {scenario+"..."}
                 </span><input
             type="text"
-            className="p-2 rounded adviceBox relative top-30"
+            className="p-2 rounded adviceBox absolute top-30"
             placeholder={"Give advice..."}
             onChange={e => setAdvice(e.target.value)}
           /></div>
@@ -308,44 +309,12 @@ export default function Home() {
         
       </div></>}
            {play === 5 && <>
-      {showResult === 0 ? <>
-        <img src={reaper.src} />
-        <p>I have seen what happens and {agentName}&#39;s fate is sealed</p>
-           <button
-            onClick={() => setShowResult(1)}
-            className={`px-6 py-2 rounded-full font-semibold transition-all bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md`}
-            disabled={isThinking}
-          >
-            Result
-          </button>
-      </>:<>
-             {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {fate.length === 0 ? <>
-            <p className="text-center text-gray-500">Your Fate Has Been Sealed</p>
-          </> : <>
-            {fate.map((fate, index) => (
-              <div
-                key={index}
-              >
-              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
-                <ReactMarkdown
-                  components={{
-                    a: props => (
-                      <a
-                        {...props}
-                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    ),
-                  }}
-                >
-                  {fate.text}
-                </ReactMarkdown>
-                </span>
-              </div>
-            ))}</>}
-      </>}
-</>}
+               <div className="absolute bottom-0"> 
+             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Survival Strategy</span>
+              <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
+                  {agentName+" decided to "+advice+"..."+messages[1].text+"..."+messages[3].text+"..."}
+                </span> 
+          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
