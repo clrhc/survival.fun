@@ -180,8 +180,8 @@ export default function Home() {
     <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full">
      {play === 0 && <>
      
-     {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span>
-     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
+     {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-5">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-0 text-white font-bold py-2 px-4 rounded"></button></span>
+     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-5" style={{height: '48px'}}></p><ConnectWallet className="relative bottom-0 text-white font-bold py-2 px-4 rounded" /></span></>}
      </>}
      {play === 1 && <>
        {!hash && !isPending ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
@@ -214,7 +214,7 @@ export default function Home() {
           /></div>
            
               
-          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}
+          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-0 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}
      {play === 4 && <>
              
               <span className="msgRemain absolute top-0 w-full text-center p-3">
