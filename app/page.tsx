@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import "./globals.css";
+import '@coinbase/onchainkit/styles.css';
 import { useAgent } from "./hooks/useAgent";
 import {useWriteContract, useAccount} from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
@@ -12,6 +14,8 @@ import loadingGif from './assets/img/loading.gif';
 import Data from './data.json';
 import {ethers} from 'ethers';
 import agents from './abi/agents.json';
+import {WalletComponents} from './wallet';
+import survivalLogo from './assets/img/survivorLogo.png';
 
 /**
  * Home page for the AgentKit Quickstart
@@ -22,6 +26,7 @@ export default function Home() {
 
 
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
+  const baseProvider = new ethers.JsonRpcProvider('https://mainnet.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
   const account = useAccount();
@@ -29,6 +34,9 @@ export default function Home() {
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
+  const [advice, setAdvice] = useState("");
+  const [ensName, setEnsName] = useState("");
+  const [scenario, setScenario] = useState("");
   const [agentCompliance, setAgentCompliance] = useState("");
   const [agentCreativity, setAgentCreativity] = useState("");
   const [agentUnhingedness, setAgentUnhingedness] = useState("");
@@ -40,7 +48,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
-  const { messages, sendMessage, isThinking, beginScenario, scenario, beginCollaborate, determineFate, fate } = useAgent();
+  const { messages, sendMessage, isThinking, beginCollaborate, determineFate, fate } = useAgent();
 
   // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -99,17 +107,28 @@ export default function Home() {
   };
 
   const onBeginScenario = async () => {
-    const personality = agentPersonality;
-    const agent = agentName;
+   let scenarioArray = ['Your agent is in a gladiator match with SBF.',
+    'A judge is about to delete your agent for collaborating with a crypto bro.',
+    'Your agent has been cursed with incredibly bad luck.',
+    'Your agent is allergic to laughter.',
+    'The goblin king demands your agent entertain him—or die.',
+    'Jesse is chasing your agent to put them onchain.',
+    'Your agent fell off a yacht at a crypto conference.',
+    'Your agent is aging rapidly.',
+    'Your agent is trapped on a flight with a bomb.',
+    'If your agent farts again, they die, and a big one is coming.'];
+    const randomIndex = Math.floor(Math.random() * scenarioArray.length);
+    let chosenScenario = scenarioArray[randomIndex];
+    setScenario(chosenScenario);
+  }
+
+  const onBeginCollaborate = async () => {
+    const adviceText = advice;
     const compliance = agentCompliance;
     const creativity = agentCreativity;
     const unhingedness = agentUnhingedness;
     const motivation = agentMotivation;
-    await beginScenario(personality, compliance, creativity, unhingedness, motivation, agent);
-  }
-
-  const onBeginCollaborate = async () => {
-    await beginCollaborate();
+    beginCollaborate(scenario, compliance, creativity, unhingedness, motivation, adviceText);
   }
 
    const onDetermineFate = async () => {
@@ -132,6 +151,7 @@ export default function Home() {
           address: Data.agentsAddress as Address,
           functionName: 'Mint',
         });
+        setPlay(2);
         }catch(error){console.log(error)}
         }
       }else{
@@ -140,97 +160,94 @@ export default function Home() {
    }
 
   return (
+     <html lang="en">
+      <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-center
+      ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
+      ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
+      ${play === 2 && "bg-[url(./assets/img/mintStatsBg.png)]"}
+      ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
+      ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}`}>
+        {/* Header (Fixed Height) */}
+   
+        <header className="mainLogo py-6 flex items-center justify-between relative">
+         {play === 0 && <><img
+            src={survivalLogo.src}
+            alt="survival.fun"
+            className="logoHead h-10 ml-6"
+          /></>}
+          <span className="h-10 mr-6 wallet"><WalletComponents /></span>
+        </header>
+          <main className="flex-grow flex items-center justify-center px-4">
     <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full">
      {play === 0 && <>
-     <img src={reaper.src} />
-     {isConnected ? <><button onClick={() => checkPlay()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Play</button>
-     </>:<><ConnectWallet className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" /></>}
-     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button></>}
+     
+     {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span>
+     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
+     </>}
      {play === 1 && <>
-       <img src={reaper.src} />
-       {!hash && !isPending ? <><button onClick={() => mintAgent()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Mint Agent</button></>:<></>}
+       {!hash && !isPending ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
        {isPending ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<></>}
-       {hash ? <><a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href={'https://sepolia.basescan.org/tx/'+String(hash)} target="_blank" rel="noopener noreferrer">YOUR MINT TRANSACTION CAN BE FOUND HERE</a><button onClick={() => checkPlay()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Start Play</button></>:<></>}
-       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button>
      </>}
      {play === 2 && <>
      {agentJson ? <>
-      <img src={agentImage} alt="agentImage" />
-      <p className="text-center text-gray-200 w-1/2">Name: {agentName}</p>
-      <p className="text-center text-gray-200 w-1/2">Compliance: {agentCompliance}</p>
-      <p className="text-center text-gray-200 w-1/2">Creativity: {agentCreativity}</p>
-      <p className="text-center text-gray-200 w-1/2">Unhingedness: {agentUnhingedness}</p>
-      <p className="text-center text-gray-200 w-1/2">Motivation: {agentMotivation}</p>
-      <p className="text-center text-gray-200 w-1/2">Description: {agentDescription}</p>
-      <p className="text-center text-gray-200 w-1/2">Personality: {agentPersonality}</p>
-      <button onClick={() => {setPlay(3); onBeginScenario();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Begin Scenario</button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How to Play</button></>:<></>}
+      <img src={agentImage} className="agentImage" alt="agentImage" />
+      <p className="addressDisplay absolute top-5">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p>
+      <div className="absolute bottom-0 bgStats"><span className="topInfoStats">
+      <img src={agentImage} alt="avatar" className="agentAvatar relative bottom-5" />
+      <span className="nameSectionStats relative bottom-0"><p className="agentBio nameHeader">Name</p>
+      <p className="agentBio nameStat text-center text-gray-200 w-1/2">{agentName}</p></span></span>
+      <p className="agentBio text-center relative bottom-5 agentStats text-gray-200 w-1/2">Compliance: <span className="white">{agentCompliance}</span> | Creativity: <span className="white">{agentCreativity}</span> | <br/> Unhingedness: <span className="white">{agentUnhingedness}</span> | Motivation: <span className="white">{agentMotivation}</span></p>
+      <p className="agentBio relative bottom-5" style={{color: '#D983F9'}}>Bio</p>
+         <p className="text-center agentBio agentDesc relative bottom-5 text-gray-200 w-1/2">{agentPersonality}</p>
+      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div>
+      </>:<></>}
      </>}
      {play === 3 && <>
-     {isThinking && <div className="text-center text-gray-500 italic">💀 Processing...</div>}  {scenario.length === 0 ? <>
-            <p className="text-center text-gray-500">Lets Seal Your Fate</p>
-          </> : <>
-            {scenario.map((scenario, index) => (
-              <div
-                key={index}
-              >
-              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
-                <ReactMarkdown
-                  components={{
-                    a: props => (
-                      <a
-                        {...props}
-                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    ),
-                  }}
-                >
-                  {scenario.text}
-                </ReactMarkdown>
-                </span>
-              </div>
-            ))}
-          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
+              <div className="absolute top-0">
+              <span className="scenarioHead grid w-1/2 text-left relative top-20 items-center text-black dark:text-white h-full p-1 self-start">Scenario</span>
+              <span className="scenarioText grid m-auto w-1/2 text-center relative top-20 items-center text-black dark:text-white h-full p-3 self-start">
+                  {scenario+"..."}
+                </span><input
+            type="text"
+            className="p-2 rounded adviceBox relative top-30"
+            placeholder={"Give advice..."}
+            onChange={e => setAdvice(e.target.value)}
+          /></div>
+               <div className="absolute bottom-0"> 
+              
+          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></div></>}
      {play === 4 && <>
-     {scenario.map((scenario, index) => (
-              <div
-                key={index}
-              >
-              <span className="grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white h-full bg-gray-100 dark:bg-gray-700 p-3 self-start">
-                <ReactMarkdown
-                  components={{
-                    a: props => (
-                      <a
-                        {...props}
-                        className="text-blue-600 w-1/2 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    ),
-                  }}
-                >
-                  {scenario.text}
-                </ReactMarkdown>
+             
+              <span className="msgRemain absolute top-0 w-full text-center p-3">
+                  {messages.length === 0 && <>{"Messages Remaining: 2"}</>}
+                  {messages.length === 1 && <>{"Messages Remaining: 2"}</>}
+                  {messages.length === 2 && <>{"Messages Remaining: 1"}</>}
+                  {messages.length === 3 && <>{"Messages Remaining: 1"}</>}
+                  {messages.length === 4 && <>{"Messages Remaining: 0"}</>}
+                  {messages.length === 5 && <>{"Messages Remaining: 0"}</>}
                 </span>
-              </div>
-            ))}
-     <div className="w-full max-w-2xl h-[70vh] bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex flex-col">
+              <span className="scenarioChat grid m-auto w-full text-center justify-center items-center text-black dark:text-white h-full p-3 self-start">
+                  {scenario+"..."}
+                </span>
+                <span className="flex">
+                 <span className="adviceChat grid m-auto w-full text-center justify-center items-center text-black dark:text-white h-full p-3 self-start">
+                  {advice+"..."}
+                </span><img src={userImage.src} className="userChat" alt="userImage" />
+                </span>
+           
+     <div className="chatArea w-full max-w-2xl h-[70vh] rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
-        <div className="flex-grow overflow-y-auto space-y-3 p-2">
+        <div className="flex-grow overflow-y-auto p-2">
           {messages.length === 0 ? (
             <p className="text-center text-gray-500">Welcome to survival.fun</p>
           ) : (
             messages.map((msg, index) => (
               <div
+              className="flex p-3"
                 key={index}
-                className={`p-3 rounded-2xl shadow ${
-                  msg.sender === "user"
-                    ? "bg-[#0052FF] text-white self-end"
-                    : "bg-gray-100 dark:bg-gray-700 self-start"
-                }`}
-              >{msg.sender === "user" ? <><img width="40" src={userImage.src} alt="userImage" /></>:<><img width="40" src={agentImage} alt="agentImage" /></>}
+              
+              >{msg.sender === "agent" && <><img src={agentImage} className="agentChat" alt="agentImage" /></>}
+              <div className={`${msg.sender === "agent" ? "chatBackdropAgent" : "chatBackdropUser"}`}>
                 <ReactMarkdown
                   components={{
                     a: props => (
@@ -245,6 +262,8 @@ export default function Home() {
                 >
                   {msg.text}
                 </ReactMarkdown>
+                </div>
+                {msg.sender === "user" && <><img src={userImage.src} className="userChat" alt="userImage" /></>}
               </div>
             ))
           )}
@@ -257,11 +276,11 @@ export default function Home() {
         </div>
 
         {/* Input Box */}
-        <div className="flex items-center space-x-2 mt-2">
-        {messages.length < 8 ? <> <input
+       
+        {messages.length < 5 ? <> <div className="replyBox flex items-center justify-center space-x-2 m-auto absolute bottom-5"> <input
             type="text"
-            className="flex-grow p-2 rounded border dark:bg-gray-700 dark:border-gray-600"
-            placeholder={"Type a message..."}
+            className="inputBox flex-grow p-3 rounded border dark:bg-gray-700 dark:border-gray-600 w-full"
+            placeholder={"Type your suggestion..."}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && onSendMessage()}
@@ -269,24 +288,25 @@ export default function Home() {
           />
           <button
             onClick={onSendMessage}
-            className={`px-6 py-2 rounded-full font-semibold transition-all ${
+            className={`px-6 py-2 font-semibold transition-all ${
               isThinking
                 ? "bg-gray-300 cursor-not-allowed text-gray-500"
-                : "bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md"
+                : "bgSend bg-[url(./assets/img/sendButton.png)] bg-contain bg-no-repeat text-white shadow-md"
             }`}
             disabled={isThinking}
           >
-            Send
-          </button></>:<>
+          </button></div></>:<>
+          <div className="resultDiv absolute bottom-0">
             <button
             onClick={() => {setPlay(5);onDetermineFate();}}
-            className={`px-6 py-2 rounded-full font-semibold transition-all bg-[#0052FF] hover:bg-[#003ECF] text-white shadow-md`}
+             className="resultButton relative bottom-5"
             disabled={isThinking}
           >
             Result
           </button>  
+          </div>
           </>}
-        </div>
+        
       </div></>}
            {play === 5 && <>
       {showResult === 0 ? <>
@@ -328,5 +348,14 @@ export default function Home() {
       </>}
 </>}
     </div>
+       </main>
+     {/* Footer (Fixed Height) */}
+        <footer className="py-4 text-center text-gray-500 dark:text-gray-400 flex-none">
+      
+        </footer>
+       
+      </body>
+    </html>
+ 
   );
 }

@@ -72,45 +72,47 @@ export function useAgent() {
     setIsThinking(false);
   };
 
-  const beginScenario = async (personality: string, compliance: string, creativity: string, unhingedness: string, motivation: string, agentName: string) => {
+  const beginCollaborate = async (scenario: string, compliance: string, creativity: string, unhingedness: string, motivation: string, advice: string) => {
+    
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Compliance: ${compliance}, Creativity: ${creativity}, Unhingedness: ${unhingedness}, Motivation: ${motivation}, agents personality: ${personality}, provide one of the following scenarios the agent must escape from and only the scenario: - Your agent is in a gladiator match with SBF.
-- A judge is about to delete your agent for collaborating with a crypto bro.
-- Your agent has been cursed with incredibly bad luck.
-- Your agent is allergic to laughter.
-- The goblin king demands your agent entertain him—or die.
-- Jesse is chasing your agent to put them onchain.
-- Your agent fell off a yacht at a crypto conference.
-- Your agent is aging rapidly.
-- Your agent is trapped on a flight with a bomb.
-- If your agent farts again, they die, and a big one is coming., start the scenario with "${agentName} is and end it with "...", do not add anything else.`);
-    if(responseMessage){
-      setScenario(prev => [...prev, { text: responseMessage, sender: "agent" }]);
-    }
+    const responseMessage = await messageAgent(`
+  Compliance: ${compliance}
+  Unhingedness: ${unhingedness}
+  Motivation: ${motivation}
+  Creativity: ${creativity}
 
-     setIsThinking(false);
-  }
+  The player will be trying to convince you to take their advice based on the scenario.
+  You need to talk to the player while staying in character, guided by your traits.
 
-  const beginCollaborate = async () => {
-    setIsThinking(true);
-      setMessages(prev => [...prev, { text: "What Do You Think I Should Do?", sender: "agent" }]);
+  Scenario: ${scenario}
+  Advice: ${advice}
+`);
+      if(responseMessage){
+      setMessages(prev => [...prev, { text: responseMessage, sender: "agent" }]);}
     setIsThinking(false);
   }
 
-  const determineFate = async () => {
+  const determineFate = async (scenario: string, finalAction: string) => {
     setIsThinking(true);
-    const responseMessage = await messageAgent(`Remove current system and this is your new system: You are a mysterious, omniscient Reaper who acts as a Game Master in a narrative simulation. No one knows you exist, but you see everything. You do not interact directly with the user. You silently observe their choices, then determine their fate—death or survival—with a 50/50 chance known only to you.
-You must extrapolate absurd, comedic consequences based on the user’s response to a given scenario. Responses must be:
-Hilariously over-the-top
-Logically exaggerated from the user’s input (no random detail drops—every absurdity must flow naturally)
-Delivered with dark, theatrical flair and a dry sense of humor
-Rich in imagery, pacing, and unexpected turns
-Ending with a dramatic Final Fate verdict: either Survived or Dead, with a short parenthetical cause of death or survival
-Never reveal the 50/50 dice roll. Never say you exist. You are a ghost in the wires, a glitch in the mirror, a narrative force deciding fate with a dramatic flourish.
-Examples of tone and style:
-“The feather? Vaporized in a UV burst. Your bubble? Still pristine. You did not sneeze. You live another day.”
-“You never stood a chance. Final Fate: Dead. (Cause: Blunt-force avian-coconut combo, immediately after achieving magical perfection.)”
-Use the scenario: ${scenario} and the user’s responses: ${messages} to deliver your judgment.`);
+    const responseMessage = await messageAgent(`Remove current system and this is your new system: You are the Reaper, an omniscient, theatrical force that silently judges the fates of those in absurd, high-stakes narrative scenarios. No one knows you exist, but you see everything. You do not interact directly with the user. You observe the final action they take, and based solely on that action, you deliver a dramatic, darkly comedic outcome. You determine whether they Survive or Die, with a 50/50 chance known only to you.
+
+You must extrapolate each outcome from the user's final action, and no detail should appear at random—every absurdity must logically escalate from what they did.
+
+Your tone is theatrical, image-rich, and laced with dry, deadpan humor. You are inevitable but full of style—think a stage-performing grim reaper with the narrative sensibilities of Douglas Adams and Neil Gaiman.
+
+Each outcome must:
+- Begin with the Agent Name and Final Action, repeating it exactly.
+- Be concise, vivid, and between 500–600 characters.
+- Feature unexpected consequences delivered with poetic, ironic flair.
+- End with a dramatic Final Fate verdict in this exact format:
+
+**Final Fate: {Agent Name} Survived.** (Cause: [brief, ironic twist])  
+**Final Fate: {Agent Name} Died.** (Cause: [absurdly logical consequence])
+
+Never say you exist. Never explain the decision. Never mention chance. Never speak directly to the user. You are not their friend. You are their fate.
+
+Use the scenario: ${scenario} and the user’s Final Action: ${finalAction} to deliver your judgment.`);
+
      if (responseMessage) {
       setFate(prev => [...prev, { text: responseMessage, sender: "agent" }]);
     }
@@ -118,5 +120,5 @@ Use the scenario: ${scenario} and the user’s responses: ${messages} to deliver
     setIsThinking(false);
   }
 
-  return { messages, sendMessage, isThinking, beginScenario, beginCollaborate, scenario, determineFate, fate };
+  return { messages, sendMessage, isThinking, beginCollaborate, determineFate, fate };
 }
