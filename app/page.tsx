@@ -8,7 +8,6 @@ import {useWriteContract, useAccount} from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
-import reaper from './assets/img/reaper.png';
 import userImage from './assets/img/user.png';
 import loadingGif from './assets/img/loading.gif';
 import Data from './data.json';
@@ -38,14 +37,13 @@ export default function Home() {
   const [agentCompliance, setAgentCompliance] = useState("");
   const [agentCreativity, setAgentCreativity] = useState("");
   const [agentUnhingedness, setAgentUnhingedness] = useState("");
-  const [showResult, setShowResult] = useState(0);
   const [agentMotivation, setAgentMotivation] = useState("");
   const [agentJson, setAgentJson] = useState();
   const [agentPersonality, setAgentPersonality] = useState("");
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
-  const { messages, sendMessage, isThinking, beginCollaborate, determineFate, fate } = useAgent();
+  const { messages, sendMessage, isThinking, beginCollaborate, determineFate } = useAgent();
 
   // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
