@@ -48,7 +48,6 @@ async function messageAgent(userMessage: string): Promise<string | null> {
  */
 export function useAgent() {
   const [messages, setMessages] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
-  const [scenario, setScenario] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
   const [fate, setFate] = useState<{ text: string; sender: "user" | "agent" }[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 

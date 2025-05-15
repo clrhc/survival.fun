@@ -26,7 +26,6 @@ export default function Home() {
 
 
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
-  const baseProvider = new ethers.JsonRpcProvider('https://mainnet.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
   const account = useAccount();
@@ -35,14 +34,12 @@ export default function Home() {
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
   const [advice, setAdvice] = useState("");
-  const [ensName, setEnsName] = useState("");
   const [scenario, setScenario] = useState("");
   const [agentCompliance, setAgentCompliance] = useState("");
   const [agentCreativity, setAgentCreativity] = useState("");
   const [agentUnhingedness, setAgentUnhingedness] = useState("");
   const [showResult, setShowResult] = useState(0);
   const [agentMotivation, setAgentMotivation] = useState("");
-  const [agentDescription, setAgentDescription] = useState();
   const [agentJson, setAgentJson] = useState();
   const [agentPersonality, setAgentPersonality] = useState("");
   const [input, setInput] = useState("");
@@ -70,7 +67,6 @@ export default function Home() {
       const _agentResult = responseJson[Number(_currentAgent)-1];
       const _agentImage = _agentResult.image;
       const _agentName = _agentResult.name;
-      const _agentDescription = _agentResult.description;
       const _agentCompliance = _agentResult.attributes[0].value;
       const _agentCreativity = _agentResult.attributes[1].value;
       const _agentUnhingedness = _agentResult.attributes[2].value;
@@ -79,7 +75,6 @@ export default function Home() {
       setAgentJson(_agentResult);
       setAgentImage(_agentImage);
       setAgentName(_agentName);
-      setAgentDescription(_agentDescription);
       setAgentCompliance(_agentCompliance);
       setAgentCreativity(_agentCreativity);
       setAgentUnhingedness(_agentUnhingedness);
@@ -107,7 +102,7 @@ export default function Home() {
   };
 
   const onBeginScenario = async () => {
-   let scenarioArray = ['Your agent is in a gladiator match with SBF.',
+   const scenarioArray = ['Your agent is in a gladiator match with SBF.',
     'A judge is about to delete your agent for collaborating with a crypto bro.',
     'Your agent has been cursed with incredibly bad luck.',
     'Your agent is allergic to laughter.',
@@ -118,7 +113,7 @@ export default function Home() {
     'Your agent is trapped on a flight with a bomb.',
     'If your agent farts again, they die, and a big one is coming.'];
     const randomIndex = Math.floor(Math.random() * scenarioArray.length);
-    let chosenScenario = scenarioArray[randomIndex];
+    const chosenScenario = scenarioArray[randomIndex];
     setScenario(chosenScenario);
   }
 
