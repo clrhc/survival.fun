@@ -155,8 +155,7 @@ export default function Home() {
 
   return (
      <html lang="en">
-     <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-top
+      <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-top absolute top-0 m-auto w-full
       ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
       ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
       ${play === 2 && "bg-[url(./assets/img/mintStatsBg.png)]"}
@@ -166,16 +165,16 @@ export default function Home() {
       ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
-        <header className="mainLogo py-6 flex items-center justify-between relative">
+        <header className="mainLogo py-6 flex items-center justify-between relative top-0">
          {play === 0 && <><img
             src={survivalLogo.src}
             alt="survival.fun"
-            className="logoHead h-10 ml-6"
+            className="logoHead h-10 ml-6 relative top-0"
           /></>}
-          <span className="h-10 mr-6 wallet"><WalletComponents /></span>
+          <span className="h-10 mr-6 wallet relative top-0"><WalletComponents /></span>
         </header>
           <main className="flex-grow flex items-center justify-center px-4">
-    <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full">
+    <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full absolute top-0">
      {play === 0 && <>
      
      {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span>
