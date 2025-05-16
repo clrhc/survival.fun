@@ -285,13 +285,7 @@ body {
 
 @media(max-width: 960px){
 
-  html, body{
-       height: 100svh-80px !important;
-    overflow-x: hidden;
-  }
-
   body{
-    position: relative;
     background-size: cover;
   }
 
