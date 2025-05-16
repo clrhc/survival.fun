@@ -183,7 +183,7 @@ export default function Home() {
       ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
       ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
       ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}
-      ${play === 7 && "bg-[url(./assets/img/resultBg.png)]"}`}>
+      ${play === 7 && "bg-[url(./assets/img/deathBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
         <header className="mainLogo py-6 flex items-center justify-between relative top-0">
