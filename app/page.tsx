@@ -43,7 +43,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [play, setPlay] = useState(0);
 
-  const { messages, sendMessage, isThinking, beginCollaborate, determineFate } = useAgent();
+  const { messages, sendMessage, isThinking, beginCollaborate, determineFate, fate } = useAgent();
 
   // Ref for the messages container
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -296,7 +296,7 @@ export default function Home() {
           </button></div></>:<>
           <div className="resultDiv absolute bottom-0">
             <button
-            onClick={() => {setPlay(5); onDetermineFate();}}
+            onClick={() => {setPlay(5);}}
              className="resultButton relative bottom-5"
             disabled={isThinking}
           >
@@ -312,7 +312,41 @@ export default function Home() {
               <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
                   {agentName+" decided to "+advice+"..."+messages[1].text+"..."+messages[3].text+"..."}
                 </span> 
-          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
+          <button onClick={() => {setPlay(6); onDetermineFate()}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
+          {play === 6 && <>
+               <div className="absolute bottom-0"> 
+             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Result</span>
+              <span className="fateText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
+                   {fate.length === 0 ? (
+            <p className="text-center text-gray-500">Determining Your Fate...</p>
+          ) : (
+            fate.map((fate, index) => (
+              <div
+              className="flex p-3"
+                key={index}
+              
+              >
+              <div>
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {fate.text}
+                </ReactMarkdown>
+                </div>
+              </div>
+            ))
+          )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
+                </span> 
+      </div></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
