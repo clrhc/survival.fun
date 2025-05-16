@@ -214,7 +214,7 @@ export default function Home() {
           /></div>
            
               
-          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-0 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}
+          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}
      {play === 4 && <>
              
               <span className="msgRemain absolute top-0 w-full text-center p-3">
