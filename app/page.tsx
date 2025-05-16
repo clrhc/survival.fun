@@ -310,7 +310,7 @@ export default function Home() {
                <div className="absolute bottom-0"> 
              <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Survival Strategy</span>
               <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
-                  {agentName+" decided to "+advice+"..."+messages[1].text+"..."+messages[3].text+"..."}
+                  {agentName+" decided to "+messages[5].text+"..."}
                 </span> 
           <button onClick={() => {setPlay(6); onDetermineFate()}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
           {play === 6 && <>
