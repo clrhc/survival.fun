@@ -155,7 +155,7 @@ export default function Home() {
 
   return (
      <html lang="en">
-     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
+     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
       <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-top absolute top-0 m-auto w-full
       ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
       ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
