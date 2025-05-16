@@ -155,13 +155,14 @@ export default function Home() {
 
   return (
      <html lang="en">
-      <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-center
+      <body className={`bodyClient dark flex flex-col min-h-screen bg-no-repeat bg-top
       ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
       ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
       ${play === 2 && "bg-[url(./assets/img/mintStatsBg.png)]"}
       ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
       ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
-      ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}`}>
+      ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
+      ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
         <header className="mainLogo py-6 flex items-center justify-between relative">
@@ -311,9 +312,10 @@ export default function Home() {
                 </span> 
           <button onClick={() => {setPlay(6); onDetermineFate()}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
           {play === 6 && <>
-               <div className="absolute bottom-0"> 
-             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Result</span>
-              <span className="fateText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
+               <div className="absolute top-10"> 
+                <img className="fateImage relative top-20 m-auto" src={agentImage} />
+              <span className="fateText grid m-auto w-1/2 text-center relative top-10 items-center text-black dark:text-white h-full p-3 self-start">
+
                    {fate.length === 0 ? (
             <p className="text-center text-gray-500">Determining Your Fate...</p>
           ) : (
@@ -324,6 +326,7 @@ export default function Home() {
               
               >
               <div>
+              <p>Scenario:<span className="bold">{" "+scenario}....</span></p>
                 <ReactMarkdown
                   components={{
                     a: props => (

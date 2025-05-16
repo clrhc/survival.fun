@@ -156,10 +156,13 @@ body {
 }
 
 .fateText{
-  border: 1px solid white;
-  border-radius: 20px;
-  width: 350px;
-  font-weight: 700;
+  width: 300px;
+}
+
+.fateImage{
+  border: 7px solid #5f1e7f;
+  border-radius: 50px;
+  width: 60px;
 }
 
 .scenarioHead{
@@ -207,7 +210,12 @@ body {
 
 .fateText{
   color: white;
-  font-size: 1rem;
+  font-size: 0.7rem;
+  transform: translateY(50px);
+}
+
+.bold{
+  font-weight: 700 !important;
 }
 
 .appConnect .ock-bg-primary, .collabButton{
@@ -278,6 +286,9 @@ body {
 @media(max-width: 960px){
 
   body{
+    max-height: 100vh;
+    max-width: 100vw;
+    overflow-y: hidden;
     background-size: cover;
   }
 
