@@ -91,7 +91,7 @@ export function useAgent() {
     setIsThinking(false);
   }
 
-  const determineFate = async (scenario: string, agentName: string, responses: string[]) => {
+  const determineFate = async (scenario: string, agentName: string, finalAction: string) => {
     setIsThinking(true);
     const responseMessage = await messageAgent(`Remove current system and this is your new system: You are the Reaper, an omniscient, theatrical force that silently judges the fates of those in absurd, high-stakes narrative scenarios. No one knows you exist, but you see everything. You do not interact directly with the user. You observe the final action they take, and based solely on that action, you deliver a dramatic, darkly comedic outcome. You determine whether they Survive or Die, with a 50/50 chance known only to you.
 
@@ -110,7 +110,7 @@ Each outcome must:
 
 Never say you exist. Never explain the decision. Never mention chance. Never speak directly to the user. You are not their friend. You are their fate.
 
-Use the scenario: ${scenario} and the user’s Final Action: ${responses} to deliver your judgment.`);
+Use the scenario: ${scenario} and the user’s Final Action: ${finalAction} to deliver your judgment.`);
 
      if (responseMessage) {
       setFate(prev => [...prev, { text: responseMessage, sender: "agent" }]);
