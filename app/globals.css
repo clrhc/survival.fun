@@ -286,8 +286,7 @@ body {
 @media(max-width: 960px){
 
   html, body{
-       max-height: 100svh;
-    max-width: 100svw;
+       height: 100svh !important;
     overflow-x: hidden;
   }
 
