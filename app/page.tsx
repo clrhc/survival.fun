@@ -127,12 +127,7 @@ export default function Home() {
   }
 
   const onBeginCollaborate = async () => {
-    const adviceText = advice;
-    const compliance = agentCompliance;
-    const creativity = agentCreativity;
-    const unhingedness = agentUnhingedness;
-    const motivation = agentMotivation;
-    beginCollaborate(scenario, compliance, creativity, unhingedness, motivation, adviceText);
+    beginCollaborate(scenario, agentCompliance, agentCreativity, agentUnhingedness, agentMotivation, advice);
   }
 
    const onDetermineFate = async () => {
