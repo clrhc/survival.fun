@@ -286,12 +286,9 @@ body {
 @media(max-width: 960px){
 
   html, body{
-       max-height: 100dvh;
-    max-width: 100dvw;
-    width: calc(var(--vh, 1dvw) * 100);
-     height: calc(var(--vh, 1dvh) * 100);
+       max-height: 100svh;
+    max-width: 100svw;
     overflow-x: hidden;
-    overflow-y: hidden;
   }
 
   body{
