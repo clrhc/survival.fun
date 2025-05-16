@@ -190,7 +190,7 @@ export default function Home() {
          {play === 0 && <><img
             src={survivalLogo.src}
             alt="survival.fun"
-            className="logoHead h-10 ml-6 relative top-0"
+            className="logoHead h-10 m-auto relative top-0"
           /></>}
           <span className="h-10 mr-6 wallet relative top-0"><WalletComponents /></span>
         </header>
