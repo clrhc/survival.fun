@@ -230,18 +230,18 @@ export default function Home() {
                   {messages.length === 4 && <>{"Messages Remaining: 0"}</>}
                   {messages.length === 5 && <>{"Messages Remaining: 0"}</>}
                 </span>
-              <span className="scenarioChat grid m-auto w-full text-center justify-center items-center text-black dark:text-white h-full p-3 self-start">
+              <p className="scenarioChat absolute top-10 grid m-auto w-full text-center justify-center items-center text-black dark:text-white p-3 self-start">
                   {scenario+"..."}
-                </span>
-                <span className="flex">
-                 <span className="adviceChat grid m-auto w-full text-center justify-center items-center text-black dark:text-white h-full p-3 self-start">
-                  {advice+"..."}
-                </span><img src={userImage.src} className="userChat" alt="userImage" />
-                </span>
+                </p>
            
-     <div className="chatArea w-full max-w-2xl h-[70vh] rounded-lg p-4 flex flex-col">
+     <div className="chatArea w-full max-w-2xl h-[55vh] rounded-lg p-4 flex flex-col">
         {/* Chat Messages */}
         <div className="flex-grow overflow-y-auto p-2">
+        <span className="flex adviceFlex">
+                 <p className="adviceChat grid m-auto w-full text-left items-center text-black dark:text-white p-3 self-start">
+                  {advice+"..."}
+                </p><img src={userImage.src} className="userChat" alt="userImage" />
+                </span>
           {messages.length === 0 ? (
             <p className="text-center text-gray-500">Welcome to survival.fun</p>
           ) : (
@@ -281,9 +281,9 @@ export default function Home() {
 
         {/* Input Box */}
        
-        {messages.length < 5 ? <> <div className="replyBox flex items-center justify-center space-x-2 m-auto absolute bottom-5"> <input
+        {messages.length < 5 ? <> <div className="replyBox flex items-center justify-center space-x-2 m-auto absolute bottom-0"> <input
             type="text"
-            className="inputBox flex-grow p-3 rounded border dark:bg-gray-700 dark:border-gray-600 w-full"
+            className="inputBox flex-grow p-3 rounded border dark:bg-gray-700 dark:border-gray-600"
             placeholder={"Type your suggestion..."}
             value={input}
             onChange={e => setInput(e.target.value)}
@@ -303,7 +303,7 @@ export default function Home() {
           <div className="resultDiv absolute bottom-0">
             <button
             onClick={() => {setPlay(5);}}
-             className="resultButton relative bottom-5"
+             className="resultButton relative bottom-0"
             disabled={isThinking}
           >
             Result

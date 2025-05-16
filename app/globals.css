@@ -66,18 +66,20 @@ body {
   border-radius: 20px;
 }
 
-.chatArea{
-  height: 55vh;
-}
 
 .scenarioChat{
   border-bottom: 1px solid #666;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin: 5px auto;
+  transform: translateY(15px);
 }
 
 .replyBox{
-  transform: translateY(-2px);
+    transform: translateX(2vw);
+}
+
+.replyBox input{
+  width: 70vw;
 }
 
 .adviceChat{
@@ -85,7 +87,11 @@ body {
  background-color: white;
   width: 250px;
   padding: 20px;
-  border-radius: 20px; 
+  border-radius: 20px;
+}
+
+.chatArea{
+  transform: translateY(10px);
 }
 
 .chatBackdropAgent{
@@ -135,6 +141,10 @@ body {
   margin-left: -5px;
   margin-right: 10px;
   border-radius: 50px;
+}
+
+.resultDiv, .replyBox{
+  transform: translateY(80px);
 }
 
 .userChat{
