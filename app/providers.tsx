@@ -1,11 +1,16 @@
 'use client';
 import type { ReactNode } from 'react';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
+import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { base } from 'wagmi/chains'; // add baseSepolia for testing 
  
 export function Providers(props: { children: ReactNode }) {
 
   return (
+     <MiniKitProvider
+      apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY_NAME}
+      chain={base}
+    >
     <OnchainKitProvider
       apiKey={process.env.ONCHAINKIT_API_KEY}
   chain={base}
@@ -30,5 +35,6 @@ export function Providers(props: { children: ReactNode }) {
     >
       {props.children}
     </OnchainKitProvider>
+     </MiniKitProvider>
   );
 }

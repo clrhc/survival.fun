@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
+import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
 import {useWriteContract, useAccount} from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
@@ -23,7 +24,7 @@ import survivalLogo from './assets/img/survivorLogo.png';
  */
 export default function Home() {
 
-
+  const { setFrameReady, isFrameReady } = useMiniKit();
   const provider = new ethers.JsonRpcProvider('https://sepolia.base.org');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const { data: hash, writeContract, isPending } = useWriteContract();
@@ -52,6 +53,12 @@ export default function Home() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+   useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
   useEffect(() => {
     async function init(){
