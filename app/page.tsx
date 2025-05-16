@@ -11,6 +11,9 @@ import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
 import loadingGif from './assets/img/loading.gif';
+import heartImage from './assets/img/heart.png';
+import ghostImage from './assets/img/ghost.png';
+import fire from './assets/img/fire.png';
 import Data from './data.json';
 import {ethers} from 'ethers';
 import agents from './abi/agents.json';
@@ -33,6 +36,7 @@ export default function Home() {
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
+  const [results, setResults] = useState(0);
   const [advice, setAdvice] = useState("");
   const [scenario, setScenario] = useState("");
   const [agentCompliance, setAgentCompliance] = useState("");
@@ -136,6 +140,14 @@ export default function Home() {
    await determineFate(scenario, agentName, finalAction);
   }
 
+  const onResult = async () => {
+    if(String(fate[0].text).includes("Survived")){
+      setResults(0);
+    }else{
+      setResults(1);
+    }
+  }
+
   const checkPlay = async () => {
     if(isConnected){
     if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{setPlay(1);}
@@ -170,7 +182,8 @@ export default function Home() {
       ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
       ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
       ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}`}>
+      ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}
+      ${play === 7 && "bg-[url(./assets/img/resultBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
         <header className="mainLogo py-6 flex items-center justify-between relative top-0">
@@ -354,7 +367,16 @@ export default function Home() {
             ))
           )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
                 </span> 
-      </div></>}
+      </div> <button onClick={() => {setPlay(7); onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}
+      {play === 7 && <>
+               <div className="absolute top-20"> 
+                <span className="ResultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
+                <p className="resultHead">{results === 0 ? <>{agentName} Survived</>:<>You Killed {agentName}</>}</p>
+                <p className="resultText w-full">{results === 0 ? <><img src={heartImage.src} /> CONGRATS</>:<><img src={ghostImage.src} /> RIP</>}</p>
+                </span> 
+              
+             
+      </div>{results === 1 ? <><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>:<><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>}</>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}

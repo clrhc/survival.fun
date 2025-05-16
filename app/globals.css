@@ -169,6 +169,10 @@ body {
   font-weight: 700;
 }
 
+.resultSpan{
+  width: 110vw;
+}
+
 .fateText{
   width: 300px;
 }
@@ -177,6 +181,46 @@ body {
   border: 7px solid #5f1e7f;
   border-radius: 50px;
   width: 60px;
+}
+
+.resultImage{
+  width: 300px;
+   -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+  transform: translateY(55px);
+}
+
+.resultAliveImage{
+  width: 300px;
+  transform: translateY(55px);
+}
+
+.fireImage{
+  width: 355px;
+  height: 145px;
+  transform: translateY(150px);
+  margin-left: 32px;
+}
+
+.resultText{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 2.3rem;
+  margin: 0 auto;
+  background-color: rgba(255,255,255,0.3);
+}
+
+.resultText img{
+  transform: translateY(3px);
+  width: 35px;
+  height: 35px;
+}
+
+.resultHead{
+  font-size: 1.2rem;
+  padding: 2px;
 }
 
 .scenarioHead{
@@ -220,6 +264,16 @@ body {
 .appConnect .ock-text-inverse, .collabButton, .scenarioText{
   color: white;
   font-size: 2rem;
+}
+
+.finishButton{
+    background: url('./assets/img/button.png');
+   background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translateX(80px);
+   width: 181px;
+  height: 45px;
 }
 
 .fateText{
@@ -301,6 +355,8 @@ body {
 
   body, html{
     background-size: cover;
+    overflow-y: hidden;
+    overflow-x: hidden;
   }
 
   .wallet{display: none;}
