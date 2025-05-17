@@ -194,7 +194,7 @@ export default function Home() {
      {play === 0 && <>
      
      {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span>
-     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
+     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
      </>}
      {play === 1 && <>
        {!hash && !isPending ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
@@ -212,7 +212,7 @@ export default function Home() {
       <p className="agentBio relative bottom-5" style={{color: '#D983F9'}}>Bio</p>
          <p className="text-center agentBio agentDesc relative bottom-5 text-gray-200 w-1/2">{agentPersonality}</p>
       <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div>
-      </>:<></>}
+      </>:<><img alt="loading" width="30" src={loadingGif.src} /></>}
      </>}
      {play === 3 && <>
               <div className="absolute top-0">
@@ -227,7 +227,7 @@ export default function Home() {
           /></div>
            
               
-          <button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}
+          {advice.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>:<><button onClick={() => {setPlay(4); onBeginCollaborate();}} className="absolute bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</>}
      {play === 4 && <>
              
               <span className="msgRemain absolute top-0 w-full text-center p-3">
@@ -362,7 +362,7 @@ export default function Home() {
             ))
           )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
                 </span> 
-      </div> <button onClick={() => {setPlay(7); onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}
+      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => {setPlay(7); onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
       {play === 7 && <>
                <div className="absolute top-20"> 
                 <span className="ResultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
