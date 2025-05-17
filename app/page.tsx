@@ -171,7 +171,7 @@ export default function Home() {
 
     const mintAgent = async () => {
     if(isConnected){
-      if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address)){setPlay(2);}else{
+      if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address) === true){setPlay(2);}else{
         try{await writeContract({ 
           abi: agents.abi,
           address: Data.agentsAddress as Address,
