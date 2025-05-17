@@ -67,7 +67,8 @@ export default function Home() {
   useEffect(() => {
     async function init(){
     if(isConnected){
-      const _currentAgent = Number(await agentsContract.currentAgent(address));
+   try{
+      const _currentAgent = Number(await agentsContract.currentAgent(address));}catch(error)();
       if(_currentAgent === 0){
 
       }else{
