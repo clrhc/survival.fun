@@ -5,7 +5,8 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import {useWriteContract, useAccount} from 'wagmi';
+import {useWriteContract, useAccount } from 'wagmi';
+import { waitForTransactionReceipt } from '@wagmi/core'
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
@@ -136,11 +137,28 @@ export default function Home() {
   }
 
   const onResult = async () => {
+     if(isConnected){
+    let result_;
     if(String(fate[0].text).includes("Survived")){
-      setResults(0);
-    }else{
       setResults(1);
+      result_ = 1;
+    }else{
+      setResults(0);
+      result_ = 0;
     }
+    try{let tx = await writeContract({ 
+          abi: agents.abi,
+          address: Data.agentsAddress as Address,
+          functionName: 'decideFate',
+          args: [result_],
+        });
+    setPlay(7);
+        
+        }catch(error){console.log(error)}
+        
+      }else{
+      
+     }
   }
 
   const checkPlay = async () => {
@@ -159,7 +177,7 @@ export default function Home() {
           address: Data.agentsAddress as Address,
           functionName: 'Mint',
         });
-        setPlay(2);
+    setPlay(2);
         }catch(error){console.log(error)}
         }
       }else{
@@ -362,16 +380,16 @@ export default function Home() {
             ))
           )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
                 </span> 
-      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => {setPlay(7); onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
+      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => {onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
       {play === 7 && <>
                <div className="absolute top-20"> 
                 <span className="ResultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
-                <p className="resultHead">{results === 0 ? <>{agentName} Survived</>:<>You Killed {agentName}</>}</p>
-                <p className="resultText w-full">{results === 0 ? <><img src={heartImage.src} /> CONGRATS</>:<><img src={ghostImage.src} /> RIP</>}</p>
+                <p className="resultHead">{results === 1 ? <>{agentName} Survived</>:<>You Killed {agentName}</>}</p>
+                <p className="resultText w-full">{results === 1 ? <><img src={heartImage.src} /> CONGRATS</>:<><img src={ghostImage.src} /> RIP</>}</p>
                 </span> 
               
              
-      </div>{results === 1 ? <><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>:<><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>}</>}
+      </div>{results === 1 ? <><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>:<><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
