@@ -89,7 +89,7 @@ export default function Home() {
       setAgentCreativity(_agentCreativity);
       setAgentUnhingedness(_agentUnhingedness);
       setAgentMotivation(_agentMotivation);
-      setAgentPersonality(String(_agentPersonality));}}catch(error){};
+      setAgentPersonality(String(_agentPersonality));}}catch(error){console.log(error)};
     }
   }
 
