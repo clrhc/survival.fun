@@ -233,7 +233,7 @@ export default function Home() {
       <p className="agentBio relative bottom-5" style={{color: '#D983F9'}}>Bio</p>
          <p className="text-center agentBio agentDesc relative bottom-5 text-gray-200 w-1/2">{agentPersonality}</p>
       <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div><img alt="loading" width="30" src={loadingGif.src} /></>:<></>} 
-     </>:<></>}
+     </>:<></>}</>}
      {play === 3 && <>
               <div className="absolute top-0">
               <span className="scenarioHead grid w-1/2 text-left relative top-20 items-center text-black dark:text-white h-full p-1 self-start">Scenario</span>
