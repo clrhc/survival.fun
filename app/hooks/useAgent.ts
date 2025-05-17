@@ -71,7 +71,7 @@ export function useAgent() {
     setIsThinking(false);
   };
 
-  const beginCollaborate = async (scenario: string, compliance: string, creativity: string, unhingedness: string, motivation: string, advice: string) => {
+  const beginCollaborate = async (scenario: string, compliance: string, creativity: string, unhingedness: string, motivation: string, advice: string, agentName: string) => {
     
     setIsThinking(true);
     const responseMessage = await messageAgent(`
@@ -85,6 +85,7 @@ export function useAgent() {
 
   Scenario: ${scenario}
   Advice: ${advice}
+  Agent Name: ${agentName}
 `);
       if(responseMessage){
       setMessages(prev => [...prev, { text: responseMessage, sender: "agent" }]);}
