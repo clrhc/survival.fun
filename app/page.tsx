@@ -145,7 +145,7 @@ export default function Home() {
       setResults(0);
       result_ = 0;
     }
-    try{let tx = await writeContract({ 
+    try{await writeContract({ 
           abi: agents.abi,
           address: Data.agentsAddress as Address,
           functionName: 'decideFate',
