@@ -6,7 +6,6 @@ import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
 import {useWriteContract, useAccount } from 'wagmi';
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
