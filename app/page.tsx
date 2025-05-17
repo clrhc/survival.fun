@@ -163,7 +163,7 @@ export default function Home() {
 
   const checkPlay = async () => {
     if(isConnected){
-    if(await agentsContract.balanceOf(address) > 0){setPlay(2);}else{setPlay(1);}
+    if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address) === true){setPlay(2);}else{setPlay(1);}
     }else{
     
     }
