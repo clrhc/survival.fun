@@ -68,7 +68,7 @@ export default function Home() {
     async function init(){
     if(isConnected){
    try{
-      const _currentAgent = Number(await agentsContract.currentAgent(address));}catch(error){};
+      const _currentAgent = Number(await agentsContract.currentAgent(address));
       if(_currentAgent === 0){
 
       }else{
@@ -89,7 +89,7 @@ export default function Home() {
       setAgentCreativity(_agentCreativity);
       setAgentUnhingedness(_agentUnhingedness);
       setAgentMotivation(_agentMotivation);
-      setAgentPersonality(String(_agentPersonality));}
+      setAgentPersonality(String(_agentPersonality));}}catch(error){};
     }
   }
 
