@@ -36,6 +36,7 @@ export default function Home() {
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
   const [agentName, setAgentName] = useState("");
+  const [activeAgent, setActiveAgent] = useState(false);
   const [results, setResults] = useState(0);
   const [advice, setAdvice] = useState("");
   const [scenario, setScenario] = useState("");
@@ -69,6 +70,8 @@ export default function Home() {
     if(isConnected){
    try{
       const _currentAgent = Number(await agentsContract.currentAgent(address));
+      const _activeAgent = await agentsContract.activeAgent(address);
+      setActiveAgent(_activeAgent);
       if(_currentAgent === 0){
 
       }else{
@@ -220,7 +223,7 @@ export default function Home() {
      </>}
      {play === 2 && <>
      {agentJson ? <>
-      <img src={agentImage} className="agentImage" alt="agentImage" />
+     {activeAgent ? <><img src={agentImage} className="agentImage" alt="agentImage" />
       <p className="addressDisplay absolute top-5">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p>
       <div className="absolute bottom-0 bgStats"><span className="topInfoStats">
       <img src={agentImage} alt="avatar" className="agentAvatar relative bottom-5" />
@@ -229,9 +232,8 @@ export default function Home() {
       <p className="agentBio text-center relative bottom-5 agentStats text-gray-200 w-1/2">Compliance: <span className="white">{agentCompliance}</span> | Creativity: <span className="white">{agentCreativity}</span> | <br/> Unhingedness: <span className="white">{agentUnhingedness}</span> | Motivation: <span className="white">{agentMotivation}</span></p>
       <p className="agentBio relative bottom-5" style={{color: '#D983F9'}}>Bio</p>
          <p className="text-center agentBio agentDesc relative bottom-5 text-gray-200 w-1/2">{agentPersonality}</p>
-      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div>
-      </>:<><img alt="loading" width="30" src={loadingGif.src} /></>}
-     </>}
+      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div><img alt="loading" width="30" src={loadingGif.src} /></>:<></>} 
+     </>:<></>}
      {play === 3 && <>
               <div className="absolute top-0">
               <span className="scenarioHead grid w-1/2 text-left relative top-20 items-center text-black dark:text-white h-full p-1 self-start">Scenario</span>
