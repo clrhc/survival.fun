@@ -5,9 +5,8 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import {useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi';
+import {useWriteContract, useAccount } from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
-import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
 import loadingGif from './assets/img/loading.gif';
@@ -30,7 +29,6 @@ export default function Home() {
   const { setFrameReady, isFrameReady } = useMiniKit();
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
-  const { data: hash, writeContract, isPending } = useWriteContract();
   const account = useAccount();
   const isConnected = account.isConnected;
   const address = account.address;
