@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import {useWriteContract, useAccount } from 'wagmi';
+import {useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import {Address} from 'viem';
 import ReactMarkdown from "react-markdown";
@@ -35,8 +35,10 @@ export default function Home() {
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
+  const [loading, setLoading] = useState(false);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
+  const [receipt, setReceipt] = useState(false);
   const [results, setResults] = useState(0);
   const [advice, setAdvice] = useState("");
   const [scenario, setScenario] = useState("");
@@ -149,15 +151,15 @@ export default function Home() {
       setResults(0);
       result_ = 0;
     }
-    try{await writeContract({ 
-          abi: agents.abi,
-          address: Data.agentsAddress as Address,
-          functionName: 'decideFate',
-          args: [result_],
-        });
+    try{
+    setLoading(1);
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, await provider.getSigner(address));
+    const tx = await agentsContract.decideFate(result_);
+    await tx.wait(1);
     setPlay(7);
-        
-        }catch(error){console.log(error)}
+    setLoading(0);
+        }catch(error){console.log(error); setLoading(0);}
         
       }else{
       
@@ -172,16 +174,20 @@ export default function Home() {
     }
   }
 
+
     const mintAgent = async () => {
     if(isConnected){
       if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address) === true){setPlay(2);}else{
-        try{await writeContract({ 
-          abi: agents.abi,
-          address: Data.agentsAddress as Address,
-          functionName: 'Mint',
-        });
+        try{   
+      setLoading(1);
+      const provider = new ethers.BrowserProvider(window.ethereum);
+    const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, await provider.getSigner(address));
+    const tx = await agentsContract.Mint();
+    await tx.wait(1);
     setPlay(2);
-        }catch(error){console.log(error)}
+    setReceipt(true);
+    setLoading(0);
+        }catch(error){console.log(error);setLoading(0);}
         }
       }else{
       
@@ -199,7 +205,8 @@ export default function Home() {
       ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
       ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
       ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}
-      ${play === 7 && "bg-[url(./assets/img/deathBg.png)]"}`}>
+      ${play === 7 && "bg-[url(./assets/img/deathBg.png)]"}
+      ${play === 8 && "bg-[url(./assets/img/deathBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
         <header className="mainLogo py-6 flex items-center justify-between relative top-0">
@@ -218,8 +225,8 @@ export default function Home() {
      </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
      </>}
      {play === 1 && <>
-       {!hash && !isPending ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
-       {isPending ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<></>}
+       {!receipt && !loading ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
+       {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<></>}
      </>}
      {play === 2 && <>
      {agentJson ? <>
@@ -346,8 +353,15 @@ export default function Home() {
               <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
                   {messages[4].text+"..."}
                 </span> 
-          <button onClick={() => {setPlay(6); onDetermineFate()}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></div></>}
+           {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<><button onClick={() => {onDetermineFate();setPlay(6)}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</div></>}
           {play === 6 && <>
+               <div className="absolute bottom-0"> 
+             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Determing Your Fate</span>
+              <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
+                  Your Fate Has Been Sealed
+                </span> 
+         {fate.length === 0 ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<>{loading ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => onResult()} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}</>}</div></>}
+          {play === 7 && <>
                <div className="absolute top-10"> 
                 <img className="fateImage relative top-20 m-auto" src={agentImage} />
               <span className="fateText grid m-auto w-1/2 text-center relative top-10 items-center text-black dark:text-white h-full p-3 self-start">
@@ -382,8 +396,8 @@ export default function Home() {
             ))
           )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
                 </span> 
-      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => {onResult()}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
-      {play === 7 && <>
+      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => setPlay(8)} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
+      {play === 8 && <>
                <div className="absolute top-20"> 
                 <span className="ResultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
                 <p className="resultHead">{results === 1 ? <>{agentName} Survived</>:<>You Killed {agentName}</>}</p>
@@ -391,7 +405,7 @@ export default function Home() {
                 </span> 
               
              
-      </div>{results === 1 ? <><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>:<><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
+      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
