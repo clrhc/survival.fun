@@ -33,7 +33,7 @@ export default function Home() {
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
   const [receipt, setReceipt] = useState(false);
