@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import {useWriteContract, useAccount } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
