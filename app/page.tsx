@@ -6,6 +6,7 @@ import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
 import { useAccount, useWriteContract } from 'wagmi';
+import {Address} from 'viem';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
@@ -167,7 +168,7 @@ export default function Home() {
       setLoading(1);
     await writeResult({
       abi: agents.abi,
-      address: Data.agentsAddress,
+      address: Data.agentsAddress as Address,
       functionName: 'decideFate',
       args: [result_],
     });
@@ -200,7 +201,7 @@ export default function Home() {
           setLoading(1);
       await writeMint({
         abi: agents.abi,
-        address: Data.agentsAddress,
+        address: Data.agentsAddress as Address,
         functionName: 'Mint',
       });
       setLoading(0);
