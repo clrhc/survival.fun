@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import { useAccount, useWriteContract, useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useWriteContract, useChainId, useSwitchChain, useWaitForTransactionReceipt } from 'wagmi';
 import {Address} from 'viem';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
@@ -33,7 +33,10 @@ export default function Home() {
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
   const { writeContractAsync: writeMint } = useWriteContract();
-  const { writeContractAsync: writeResult } = useWriteContract();
+  const { writeContractAsync: writeResult, data: resultHash } = useWriteContract();
+  const {isSuccess: isCompleted} = useWaitForTransactionReceipt({
+      hash: resultHash,
+  });
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
@@ -117,8 +120,11 @@ export default function Home() {
     function checkWallet(){
          const walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
          setWalletActive(walletActive_.length);
+         if(isCompleted){
+          setPlay(7);
+         }
     }
-    const interval = setInterval(() => checkWallet(), 100);
+    const interval = setInterval(() => checkWallet(), 10);
       return () => {
       clearInterval(interval);
       }
@@ -180,7 +186,6 @@ export default function Home() {
       args: [result_],
     });
     setLoading(0);
-    setPlay(7);
         }catch(error){console.log(error);setLoading(0);}
         
       }else{
@@ -211,8 +216,8 @@ export default function Home() {
         address: Data.agentsAddress as Address,
         functionName: 'Mint',
       });
-      setLoading(0);
       setPlay(2);
+      setLoading(0);
         }catch(error){console.log(error);setLoading(0);}
       }
       }else{
