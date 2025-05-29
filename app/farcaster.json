@@ -1,0 +1,16 @@
+{
+  "accountAssociation": {
+  "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEI1MzFERENDMUZjRjk4QkM4M0ZhMTc0OGZCZDdCNTI5QTZFMTc3Y2MifQ",
+  "payload": "eyJkb21haW4iOiJzdXJ2aXZhbC1mdW4udmVyY2VsLmFwcCJ9",
+  "signature": "MHg3NzhjYzM3N2IxYzQ4NTliMjQ1OTQzZGY3MWJjMzA2MTRkZGIzODg5ZmNjOTdjNGI2YzVlMTgxNTQ5ODZmOGQzNjFhYTJlYzBiMDVjYTQxMmI4ZDg2NTQyYTFhM2JmOWE3NGEwYzcyZjk3OWUxMTQ1OWQzNTkwMjlkOTRlYTkzODFj"
+  },
+  "frame": {
+    "version": "next",
+    "name": "survival-fun",
+    "iconUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
+    "splashImageUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
+    "splashBackgroundColor": "#FFF",
+    "homeUrl": "https://survival-fun.vercel.app",
+    "imageUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
+  }
+}
