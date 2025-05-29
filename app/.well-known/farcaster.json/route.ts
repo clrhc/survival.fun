@@ -28,7 +28,7 @@ export async function GET() {
       screenshotUrls: [],
       iconUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
       imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
-      splashImageUrl: process.env.NEXT_PUBLIC_APP_SPLASH_IMAGE,
+      splashImageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
       splashBackgroundColor: process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR,
       homeUrl: URL,
       webhookUrl: `${URL}/api/webhook`,
