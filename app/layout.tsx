@@ -25,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
             url: URL,
             splashImageUrl: process.env.NEXT_PUBLIC_APP_IMAGE_URL,
             imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
+            iconUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
             splashBackgroundColor:
               "#FFF",
           },
