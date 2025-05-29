@@ -9,7 +9,8 @@
     "name": "survival-fun",
     "iconUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
     "splashImageUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
-    "splashBackgroundColor": "#000000",
-    "homeUrl": "https://survival-fun.vercel.app"
+    "splashBackgroundColor": "#000",
+    "homeUrl": "https://survival-fun.vercel.app",
+    "imageUrl": "https://survival-fun.vercel.app/_next/static/media/survivorLogo.497cbaea.png",
   }
 }
