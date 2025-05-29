@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract } from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
@@ -31,13 +31,11 @@ export default function Home() {
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
-  const { writeContractAsync: writeMint, data: mintHash, isPending: isMintPending } = useWriteContract();
-  const { writeContractAsync: writeResult, data: resultHash, isPending: isResultPending } = useWriteContract();
+  const { writeContractAsync: writeMint } = useWriteContract();
+  const { writeContractAsync: writeResult } = useWriteContract();
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
-  const [txHashMint, setTxHashMint] = useState("");
-  const [txHashResult, setTxHashResult] = useState("");
   const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
@@ -100,7 +98,6 @@ export default function Home() {
       setAgentMotivation(_agentMotivation);
       setAgentPersonality(String(_agentPersonality));}}catch(error){console.log(error)};
     }
-    console.log(loading);
   }
 
     const interval = setInterval(() => init(), 1000);
@@ -168,14 +165,16 @@ export default function Home() {
       result_ = 0;
     }
     try{
+      setLoading(1);
     await writeResult({
       abi: agents.abi,
       address: Data.agentsAddress,
       functionName: 'decideFate',
       args: [result_],
     });
+    setLoading(0);
     setPlay(7);
-        }catch(error){console.log(error);}
+        }catch(error){console.log(error);setLoading(0);}
         
       }else{
       
@@ -199,13 +198,15 @@ export default function Home() {
     if(isConnected){
       if(await agentsContract.activeAgent(address)){setPlay(2)}else{
         try{   
+          setLoading(1);
       await writeMint({
         abi: agents.abi,
         address: Data.agentsAddress,
         functionName: 'Mint',
       });
+      setLoading(0);
       setPlay(2);
-        }catch(error){console.log(error);}
+        }catch(error){console.log(error);setLoading(0);}
       }
       }else{
       
@@ -249,9 +250,9 @@ export default function Home() {
      {play === 1 && <>
        <span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p>
         <p className="mintText relative bottom-20  m-auto text-white font-bold py-2 px-4 rounded"></p>
-        {!isMintPending ? <>{activeAgent ? <><button onClick={() => setPlay(2)} className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded">Continue</button>
+        {!loading ? <>{activeAgent ? <><button onClick={() => setPlay(2)} className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded">Continue</button>
         </>:<>
-        {isMintPending ? <><button className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => mintAgent()} className="mintAgent relative bottom-10 text-white font-bold py-2 px-4 rounded"></button></>}</>}
+        {loading ? <><button className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => mintAgent()} className="mintAgent relative bottom-10 text-white font-bold py-2 px-4 rounded"></button></>}</>}
         </>:<><button className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>}</span>
      </>}
      {play === 2 && <>
@@ -389,7 +390,7 @@ export default function Home() {
                </span> 
          {fate.length === 0 ? <>
          <button style={{visibility: 'hidden'}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button>
-         </>:<>{isResultPending ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
+         </>:<>{loading ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
          </>:<><button onClick={() => onResult()} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}
           </>}</div></>}
          {play === 7 && <>
