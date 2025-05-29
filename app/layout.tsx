@@ -14,10 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "survivor-fun",
     description:
       "survivor-fun - minikit",
-    imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
+         imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
         button: {
           title: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}`,
           action: {
