@@ -33,7 +33,7 @@ export default function Home() {
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
   const { writeContractAsync: writeMint } = useWriteContract();
-  const { writeContractAsync: writeResult, data: resultHash } = useWriteContract();
+  const { writeContractAsync: writeResult, data: resultHash, isPending: isResultPending } = useWriteContract();
   const {isSuccess: isCompleted} = useWaitForTransactionReceipt({
       hash: resultHash,
   });
@@ -402,7 +402,7 @@ export default function Home() {
                </span> 
          {fate.length === 0 ? <>
          <button style={{visibility: 'hidden'}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button>
-         </>:<>{loading ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
+         </>:<>{isResultPending ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
          </>:<><button onClick={() => onResult()} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}
           </>}</div></>}
          {play === 7 && <>
