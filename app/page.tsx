@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import { useAccount } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
@@ -13,6 +13,7 @@ import loadingGif from './assets/img/loading.gif';
 import heartImage from './assets/img/heart.png';
 import ghostImage from './assets/img/ghost.png';
 import fire from './assets/img/fire.png';
+import party from './assets/img/party.png';
 import Data from './data.json';
 import {ethers} from 'ethers';
 import agents from './abi/agents.json';
@@ -30,14 +31,19 @@ export default function Home() {
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
+  const { writeContractAsync: writeMint, data: mintHash, isPending: isMintPending } = useWriteContract();
+  const { writeContractAsync: writeResult, data: resultHash, isPending: isResultPending } = useWriteContract();
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
+  const [txHashMint, setTxHashMint] = useState("");
+  const [txHashResult, setTxHashResult] = useState("");
   const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
   const [receipt, setReceipt] = useState(false);
-  const [results, setResults] = useState(0);
+  const [results, setResults] = useState(2);
+  const [walletActive, setWalletActive] = useState(0);
   const [advice, setAdvice] = useState("");
   const [scenario, setScenario] = useState("");
   const [agentCompliance, setAgentCompliance] = useState("");
@@ -94,9 +100,21 @@ export default function Home() {
       setAgentMotivation(_agentMotivation);
       setAgentPersonality(String(_agentPersonality));}}catch(error){console.log(error)};
     }
+    console.log(loading);
   }
 
     const interval = setInterval(() => init(), 1000);
+      return () => {
+      clearInterval(interval);
+      }
+  });
+
+  useEffect(() => {
+    function checkWallet(){
+         let walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
+         setWalletActive(walletActive_.length);
+    }
+    const interval = setInterval(() => checkWallet(), 100);
       return () => {
       clearInterval(interval);
       }
@@ -150,14 +168,14 @@ export default function Home() {
       result_ = 0;
     }
     try{
-    setLoading(1);
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, await provider.getSigner(address));
-    const tx = await agentsContract.decideFate(result_);
-    await tx.wait(1);
+    await writeResult({
+      abi: agents.abi,
+      address: Data.agentsAddress,
+      functionName: 'decideFate',
+      args: [result_],
+    });
     setPlay(7);
-    setLoading(0);
-        }catch(error){console.log(error); setLoading(0);}
+        }catch(error){console.log(error);}
         
       }else{
       
@@ -166,27 +184,29 @@ export default function Home() {
 
   const checkPlay = async () => {
     if(isConnected){
-    if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address) === true){setPlay(2);}else{setPlay(1);}
+      if(await agentsContract.activeAgent(address)){
+        setPlay(2)
+      }else{
+        setPlay(1)
+      }
     }else{
-    
+
     }
   }
 
 
     const mintAgent = async () => {
     if(isConnected){
-      if(await agentsContract.balanceOf(address) > 0 && await agentsContract.activeAgent(address) === true){setPlay(2);}else{
+      if(await agentsContract.activeAgent(address)){setPlay(2)}else{
         try{   
-      setLoading(1);
-      const provider = new ethers.BrowserProvider(window.ethereum);
-    const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, await provider.getSigner(address));
-    const tx = await agentsContract.Mint();
-    await tx.wait(1);
-    setPlay(2);
-    setReceipt(true);
-    setLoading(0);
-        }catch(error){console.log(error);setLoading(0);}
-        }
+      await writeMint({
+        abi: agents.abi,
+        address: Data.agentsAddress,
+        functionName: 'Mint',
+      });
+      setPlay(2);
+        }catch(error){console.log(error);}
+      }
       }else{
       
      }
@@ -202,7 +222,7 @@ export default function Home() {
       ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
       ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
       ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 6 && "bg-[url(./assets/img/resultBg.png)]"}
+      ${play === 6 && "bg-[url(./assets/img/survBg.png)]"}
       ${play === 7 && "bg-[url(./assets/img/deathBg.png)]"}
       ${play === 8 && "bg-[url(./assets/img/deathBg.png)]"}`}>
         {/* Header (Fixed Height) */}
@@ -218,13 +238,21 @@ export default function Home() {
           <main className="flex-grow flex items-center justify-center px-4">
     <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full absolute top-0">
      {play === 0 && <>
-     
-     {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span>
-     </>:<><span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p><ConnectWallet className="relative bottom-5 text-white font-bold py-2 px-4 rounded" /></span></>}
+     {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p>
+      <span className="relative bottom-5 text-white font-bold py-2 px-4 rounded"><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></span>
+     </>:<>
+     <span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p>
+      <span className="relative bottom-5 text-white font-bold py-2 px-4 rounded" style={{visibility: walletActive === 1 ? "hidden" : "initial"}}><ConnectWallet /></span>
+      {walletActive === 1 && (<><span className="relative bottom-5 text-white font-bold py-2 px-4 rounded"><div className="loadButton"><img alt="loading" width="30" src={loadingGif.src} /></div></span></>)}
+      </span></>}
      </>}
      {play === 1 && <>
-       {!receipt && !loading ? <><span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p><p className="mintText relative bottom-10  m-auto text-white font-bold py-2 px-4 rounded"></p><button onClick={() => mintAgent()} className="mintAgent relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></>:<></>}
-       {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<></>}
+       <span className="absolute bottom-0"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p>
+        <p className="mintText relative bottom-20  m-auto text-white font-bold py-2 px-4 rounded"></p>
+        {!isMintPending ? <>{activeAgent ? <><button onClick={() => setPlay(2)} className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded">Continue</button>
+        </>:<>
+        {isMintPending ? <><button className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => mintAgent()} className="mintAgent relative bottom-10 text-white font-bold py-2 px-4 rounded"></button></>}</>}
+        </>:<><button className="collabButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>}</span>
      </>}
      {play === 2 && <>
      {agentJson ? <>
@@ -276,7 +304,7 @@ export default function Home() {
                 </p><img src={userImage.src} className="userChat" alt="userImage" />
                 </span>
           {messages.length === 0 ? (
-            <p className="text-center text-gray-500">Welcome to survival.fun</p>
+            <p className="text-center text-gray-500"></p>
           ) : (
             messages.map((msg, index) => (
               <div
@@ -353,13 +381,18 @@ export default function Home() {
                 </span> 
            {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<><button onClick={() => {onDetermineFate();setPlay(6)}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</div></>}
           {play === 6 && <>
+          
                <div className="absolute bottom-0"> 
-             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Determing Your Fate</span>
-              <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
-                  Your Fate Has Been Sealed
-                </span> 
-         {fate.length === 0 ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<>{loading ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => onResult()} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}</>}</div></>}
-          {play === 7 && <>
+             <span className="fateHead grid w-1/2 text-left relative bottom-60 items-center text-black dark:text-white h-full p-1 self-start">Determing Your Fate</span>
+              <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-60 items-center text-black dark:text-white h-full p-3 self-start">
+               {fate.length === 0 ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<>Your Fate Has Been Sealed</>}   
+               </span> 
+         {fate.length === 0 ? <>
+         <button style={{visibility: 'hidden'}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button>
+         </>:<>{isResultPending ? <><button className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
+         </>:<><button onClick={() => onResult()} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}
+          </>}</div></>}
+         {play === 7 && <>
                <div className="absolute top-10"> 
                 <img className="fateImage relative top-20 m-auto" src={agentImage} />
               <span className="fateText grid m-auto w-1/2 text-center relative top-10 items-center text-black dark:text-white h-full p-3 self-start">
@@ -375,6 +408,7 @@ export default function Home() {
               >
               <div>
               <p>Scenario:<span className="bold">{" "+scenario}....</span></p>
+              <br/>
                 <ReactMarkdown
                   components={{
                     a: props => (
@@ -394,7 +428,8 @@ export default function Home() {
             ))
           )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
                 </span> 
-      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><button onClick={() => setPlay(8)} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
+
+      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>:<><p className="survStatus absolute bottom-20">{results === 1 ? <><img src={heartImage.src} /> {agentName} Survived</>:<><img src={ghostImage.src} /> {agentName} Died</>}</p><button onClick={() => setPlay(8)} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
       {play === 8 && <>
                <div className="absolute top-20"> 
                 <span className="ResultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
@@ -403,7 +438,7 @@ export default function Home() {
                 </span> 
               
              
-      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
+      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button onClick={() => setPlay(0)} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Play Again</button></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
