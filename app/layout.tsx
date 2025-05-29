@@ -17,7 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
-        imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
         button: {
           title: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}`,
           action: {
@@ -25,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
             name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
             url: URL,
             splashImageUrl: process.env.NEXT_PUBLIC_APP_IMAGE_URL,
+            imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
             splashBackgroundColor:
               "#FFF",
           },
