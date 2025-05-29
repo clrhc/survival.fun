@@ -227,7 +227,7 @@ export default function Home() {
 
   return (
      <html lang="en">
-     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
       <body className={`bodyClient dark flex flex-col bg-no-repeat bg-top absolute top-0 m-auto w-full
       ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
       ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
