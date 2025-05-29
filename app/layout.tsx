@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "survivor-fun",
     description:
       "survivor-fun - minikit",
+    imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
@@ -23,8 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
             type: "launch_frame",
             name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
             url: URL,
-            splashImageUrl: process.env.NEXT_PUBLIC_APP_IMAGE_URL,
-            imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
+            splashImageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
             iconUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
             splashBackgroundColor:
               "#FFF",
