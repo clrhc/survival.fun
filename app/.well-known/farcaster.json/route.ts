@@ -26,7 +26,7 @@ export async function GET() {
       subtitle: "survivor-fun",
       description: "survivor-fun",
       screenshotUrls: [],
-      iconUrl: process.env.NEXT_PUBLIC_APP_ICON,
+      iconUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
       imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
       splashImageUrl: process.env.NEXT_PUBLIC_APP_SPLASH_IMAGE,
       splashBackgroundColor: process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR,
