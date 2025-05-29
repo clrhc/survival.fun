@@ -120,7 +120,7 @@ export default function Home() {
     function checkWallet(){
          const walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
          setWalletActive(walletActive_.length);
-         if(isCompleted){
+         if(isCompleted && play === 6){
           setPlay(7);
          }
     }
@@ -451,7 +451,7 @@ export default function Home() {
                 </span> 
               
              
-      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button onClick={() => setPlay(0)} className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded">Play Again</button></>}
+      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
