@@ -5,7 +5,7 @@ import "./globals.css";
 import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAgent } from "./hooks/useAgent";
-import { useAccount, useWriteContract } from 'wagmi';
+import { useAccount, useWriteContract, useChainId, useSwitchChain } from 'wagmi';
 import {Address} from 'viem';
 import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
@@ -37,6 +37,9 @@ export default function Home() {
   const isConnected = account.isConnected;
   const address = account.address;
   const [agentImage, setAgentImage] = useState();
+  const [baseId] = useState(8453);
+  const {switchChain} = useSwitchChain();
+  const networkId = useChainId();
   const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
@@ -72,6 +75,10 @@ export default function Home() {
   useEffect(() => {
     async function init(){
     if(isConnected){
+      if(networkId !== baseId){
+        switchChain({chainId: baseId});
+      }
+      
    try{
       const _currentAgent = Number(await agentsContract.currentAgent(address));
       const _activeAgent = await agentsContract.activeAgent(address);
@@ -155,7 +162,7 @@ export default function Home() {
   }
 
   const onResult = async () => {
-     if(isConnected){
+     if(isConnected && networkId === baseId){
     let result_;
     if(String(fate[0].text).includes("Survived")){
       setResults(1);
@@ -195,7 +202,7 @@ export default function Home() {
 
 
     const mintAgent = async () => {
-    if(isConnected){
+    if(isConnected && networkId === baseId){
       if(await agentsContract.activeAgent(address)){setPlay(2)}else{
         try{   
           setLoading(1);
