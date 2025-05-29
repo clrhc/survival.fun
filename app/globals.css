@@ -78,6 +78,10 @@ body {
     transform: translateX(2vw);
 }
 
+input{
+  font-size: 16px;
+}
+
 .replyBox input{
   width: 70vw;
 }
