@@ -39,7 +39,6 @@ export default function Home() {
   const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
-  const [receipt, setReceipt] = useState(false);
   const [results, setResults] = useState(2);
   const [walletActive, setWalletActive] = useState(0);
   const [advice, setAdvice] = useState("");
@@ -108,7 +107,7 @@ export default function Home() {
 
   useEffect(() => {
     function checkWallet(){
-         let walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
+         const walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
          setWalletActive(walletActive_.length);
     }
     const interval = setInterval(() => checkWallet(), 100);
