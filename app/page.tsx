@@ -389,7 +389,7 @@ export default function Home() {
            {play === 5 && <>
                <div className="absolute bottom-0"> 
              <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Survival Strategy</span>
-              <span className="scenarioText grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
+              <span className="scenarioTextTwo grid m-auto w-1/2 text-center relative bottom-20 items-center text-black dark:text-white h-full p-3 self-start">
                   {messages[4].text+"..."}
                 </span> 
            {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<><button onClick={() => {onDetermineFate();setPlay(6)}} className="relative bottom-5 collabButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</div></>}
