@@ -320,11 +320,12 @@ export default function Home() {
             <p className="text-center text-gray-500"></p>
           ) : (
             messages.map((msg, index) => (
+             
               <div
               className="flex p-3"
                 key={index}
               
-              >{msg.sender === "agent" && <><img src={agentImage} className="agentChat" alt="agentImage" /></>}
+              > {index === 4 ? <></>:<>{msg.sender === "agent" && <><img src={agentImage} className="agentChat" alt="agentImage" /></>}
               <div className={`${msg.sender === "agent" ? "chatBackdropAgent" : "chatBackdropUser"}`}>
                 <ReactMarkdown
                   components={{
@@ -341,7 +342,7 @@ export default function Home() {
                   {msg.text}
                 </ReactMarkdown>
                 </div>
-                {msg.sender === "user" && <><img src={userImage.src} className="userChat" alt="userImage" /></>}
+                {msg.sender === "user" && <><img src={userImage.src} className="userChat" alt="userImage" /></>}</>}
               </div>
             ))
           )}
@@ -451,7 +452,7 @@ export default function Home() {
                 </span> 
               
              
-      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survival-fun.vercel.app" rel="noopener noreferrer">Play Again</a></button></>}
+      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survivor.fun" rel="noopener noreferrer">Play Again</a></button></>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
