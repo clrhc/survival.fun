@@ -249,25 +249,25 @@ export default function Home() {
      <html lang="en">
      <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
       <body className={`bodyClient dark flex flex-col bg-no-repeat ${isMobile && "bg-top"} ${!isMobile && "bg-center bg-cover"} absolute top-0 m-auto w-full
-      ${play === 0 & !isMobile && "bg-[url(./assets/img/desktopbg.png)]"}
-      ${play === 1 & !isMobile  && "bg-[url(./assets/img/mintdesktop.png)]"}
-      ${play === 2 & !isMobile  && "bg-[url(./assets/img/desktopstats.png)]"}
-      ${play === 3 & !isMobile  && "bg-[url(./assets/img/desklight.png)]"}
-      ${play === 4 & !isMobile  && "bg-[url(./assets/img/chatdesktop.png)]"}
-      ${play === 5 & !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
-      ${play === 6 & !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
-      ${play === 7 & !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
-      ${play === 8 & !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
-      ${play === 9 & !isMobile  && "bg-[url(./assets/img/statdesktop.png)]"}
-      ${play === 0 & isMobile && "bg-[url(./assets/img/bg.png)]"}
-      ${play === 1 & isMobile && "bg-[url(./assets/img/mintBg.png)]"}
-      ${play === 2 & isMobile && "bg-[url(./assets/img/mintStatsBg.png)]"}
-      ${play === 3 & isMobile && "bg-[url(./assets/img/fateBg.png)]"}
-      ${play === 4 & isMobile && "bg-[url(./assets/img/chatBg.png)]"}
-      ${play === 5 & isMobile && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 6 & isMobile && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 7 & isMobile && "bg-[url(./assets/img/deathBg.png)]"}
-      ${play === 8 & isMobile && "bg-[url(./assets/img/deathBg.png)]"}`}>
+      ${play === 0 && !isMobile && "bg-[url(./assets/img/desktopbg.png)]"}
+      ${play === 1 && !isMobile  && "bg-[url(./assets/img/mintdesktop.png)]"}
+      ${play === 2 && !isMobile  && "bg-[url(./assets/img/desktopstats.png)]"}
+      ${play === 3 && !isMobile  && "bg-[url(./assets/img/desklight.png)]"}
+      ${play === 4 && !isMobile  && "bg-[url(./assets/img/chatdesktop.png)]"}
+      ${play === 5 && !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
+      ${play === 6 && !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
+      ${play === 7 && !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
+      ${play === 8 && !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
+      ${play === 9 && !isMobile  && "bg-[url(./assets/img/statdesktop.png)]"}
+      ${play === 0 && isMobile && "bg-[url(./assets/img/bg.png)]"}
+      ${play === 1 && isMobile && "bg-[url(./assets/img/mintBg.png)]"}
+      ${play === 2 && isMobile && "bg-[url(./assets/img/mintStatsBg.png)]"}
+      ${play === 3 && isMobile && "bg-[url(./assets/img/fateBg.png)]"}
+      ${play === 4 && isMobile && "bg-[url(./assets/img/chatBg.png)]"}
+      ${play === 5 && isMobile && "bg-[url(./assets/img/survBg.png)]"}
+      ${play === 6 && isMobile && "bg-[url(./assets/img/survBg.png)]"}
+      ${play === 7 && isMobile && "bg-[url(./assets/img/deathBg.png)]"}
+      ${play === 8 && isMobile && "bg-[url(./assets/img/deathBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
          {play === 0 & isMobile ? <><header className="mainLogo py-6 flex items-center justify-between relative top-0">
