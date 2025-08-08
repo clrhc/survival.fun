@@ -1,8 +1,39 @@
 'use client';
 import type { ReactNode } from 'react';
-import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
-import { base } from 'wagmi/chains'; // add baseSepolia for testing 
+import { createAppKit } from '@reown/appkit/react';
+import { WagmiProvider } from 'wagmi';
+import { base, baseSepolia } from '@reown/appkit/networks';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+
+const queryClient = new QueryClient();
+const projectId = '48d0600b40c62dbdd017ffb85ad8bf90';
+
+const metadata = {
+  name: 'Survivor.fun',
+  description: 'survivor.fun',
+  url: 'https://survivor.fun', // origin must match your domain & subdomain
+  icons: ['https://avatars.githubusercontent.com/u/179229932']
+};
+
+const networks = [base, baseSepolia];
+const wagmiAdapter = new WagmiAdapter({
+  networks,
+  projectId,
+  ssr: true
+});
+
+createAppKit({
+  adapters: [wagmiAdapter],
+  networks,
+  projectId,
+  metadata,
+  features: {
+    analytics: true // Optional - defaults to your Cloud configuration
+  }
+});
+
  
 export function Providers(props: { children: ReactNode }) {
 
@@ -11,30 +42,12 @@ export function Providers(props: { children: ReactNode }) {
       apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY_NAME}
       chain={base}
     >
-    <OnchainKitProvider
-      apiKey={process.env.ONCHAINKIT_API_KEY}
-  chain={base}
-  config={{
-    appearance: {
-      name: 'survival.fun',        // Displayed in modal header
-      logo: 'https://altcoinsbox.com/wp-content/uploads/2023/02/base-logo-300x300.webp',// Displayed in modal header
-      mode: 'auto',                 // 'light' | 'dark' | 'auto'
-      theme: 'default',             // 'default' or custom theme
-    },
-    wallet: { 
-      display: 'modal', 
-      termsUrl: 'https://...', 
-      privacyUrl: 'https://...', 
-      supportedWallets: { 
-        rabby: true, 
-        trust: true, 
-        frame: true, 
-      }, 
-      },
-  }}
-    >
+   <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+     <html lang="en">
+     <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
       {props.children}
-    </OnchainKitProvider>
+      </html>
+    </WagmiProvider>
      </MiniKitProvider>
   );
 }

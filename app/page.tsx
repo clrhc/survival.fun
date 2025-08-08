@@ -2,23 +2,22 @@
 
 import { useState, useEffect, useRef } from "react";
 import "./globals.css";
-import '@coinbase/onchainkit/styles.css';
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
+import { useAppKit } from "@reown/appkit/react";
 import { useAgent } from "./hooks/useAgent";
 import { useAccount, useWriteContract, useChainId, useSwitchChain, useWaitForTransactionReceipt } from 'wagmi';
 import {Address} from 'viem';
-import { ConnectWallet} from '@coinbase/onchainkit/wallet';
 import ReactMarkdown from "react-markdown";
 import userImage from './assets/img/user.png';
 import loadingGif from './assets/img/loading.gif';
 import heartImage from './assets/img/heart.png';
 import ghostImage from './assets/img/ghost.png';
 import fire from './assets/img/fire.png';
+import graveyard from './assets/img/graveyard.png';
 import party from './assets/img/party.png';
 import Data from './data.json';
 import {ethers} from 'ethers';
 import agents from './abi/agents.json';
-import {WalletComponents} from './wallet';
 import survivalLogo from './assets/img/survivorLogo.png';
 
 /**
@@ -29,6 +28,7 @@ import survivalLogo from './assets/img/survivorLogo.png';
 export default function Home() {
 
   const { setFrameReady, isFrameReady } = useMiniKit();
+  const {open, close} = useAppKit();
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
@@ -46,8 +46,8 @@ export default function Home() {
   const [loading, setLoading] = useState(0);
   const [agentName, setAgentName] = useState("");
   const [activeAgent, setActiveAgent] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [results, setResults] = useState(2);
-  const [walletActive, setWalletActive] = useState(0);
   const [advice, setAdvice] = useState("");
   const [scenario, setScenario] = useState("");
   const [agentCompliance, setAgentCompliance] = useState("");
@@ -118,8 +118,6 @@ export default function Home() {
 
   useEffect(() => {
     function checkWallet(){
-         const walletActive_ = document.querySelectorAll("[aria-label^='Connect Wallet']");
-         setWalletActive(walletActive_.length);
          if(isCompleted && play === 6){
           setPlay(7);
          }
@@ -129,6 +127,28 @@ export default function Home() {
       clearInterval(interval);
       }
   });
+
+   useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 1200) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+
+    // Set the initial value based on the current window size
+    handleResize();
+
+    // Add the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Auto-scroll whenever messages change
   useEffect(() => {
@@ -228,35 +248,44 @@ export default function Home() {
   return (
      <html lang="en">
      <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
-      <body className={`bodyClient dark flex flex-col bg-no-repeat bg-top absolute top-0 m-auto w-full
-      ${play === 0 && "bg-[url(./assets/img/bg.png)]"}
-      ${play === 1 && "bg-[url(./assets/img/mintBg.png)]"}
-      ${play === 2 && "bg-[url(./assets/img/mintStatsBg.png)]"}
-      ${play === 3 && "bg-[url(./assets/img/fateBg.png)]"}
-      ${play === 4 && "bg-[url(./assets/img/chatBg.png)]"}
-      ${play === 5 && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 6 && "bg-[url(./assets/img/survBg.png)]"}
-      ${play === 7 && "bg-[url(./assets/img/deathBg.png)]"}
-      ${play === 8 && "bg-[url(./assets/img/deathBg.png)]"}`}>
+      <body className={`bodyClient dark flex flex-col bg-no-repeat ${isMobile && "bg-top"} ${!isMobile && "bg-center bg-cover"} absolute top-0 m-auto w-full
+      ${play === 0 & !isMobile && "bg-[url(./assets/img/desktopbg.png)]"}
+      ${play === 1 & !isMobile  && "bg-[url(./assets/img/mintdesktop.png)]"}
+      ${play === 2 & !isMobile  && "bg-[url(./assets/img/desktopstats.png)]"}
+      ${play === 3 & !isMobile  && "bg-[url(./assets/img/desklight.png)]"}
+      ${play === 4 & !isMobile  && "bg-[url(./assets/img/chatdesktop.png)]"}
+      ${play === 5 & !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
+      ${play === 6 & !isMobile  && "bg-[url(./assets/img/fatedesktop.png)]"}
+      ${play === 7 & !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
+      ${play === 8 & !isMobile  && "bg-[url(./assets/img/desktopresult.png)]"}
+      ${play === 9 & !isMobile  && "bg-[url(./assets/img/statdesktop.png)]"}
+      ${play === 0 & isMobile && "bg-[url(./assets/img/bg.png)]"}
+      ${play === 1 & isMobile && "bg-[url(./assets/img/mintBg.png)]"}
+      ${play === 2 & isMobile && "bg-[url(./assets/img/mintStatsBg.png)]"}
+      ${play === 3 & isMobile && "bg-[url(./assets/img/fateBg.png)]"}
+      ${play === 4 & isMobile && "bg-[url(./assets/img/chatBg.png)]"}
+      ${play === 5 & isMobile && "bg-[url(./assets/img/survBg.png)]"}
+      ${play === 6 & isMobile && "bg-[url(./assets/img/survBg.png)]"}
+      ${play === 7 & isMobile && "bg-[url(./assets/img/deathBg.png)]"}
+      ${play === 8 & isMobile && "bg-[url(./assets/img/deathBg.png)]"}`}>
         {/* Header (Fixed Height) */}
    
-        <header className="mainLogo py-6 flex items-center justify-between relative top-0">
-         {play === 0 && <><img
+         {play === 0 & isMobile ? <><header className="mainLogo py-6 flex items-center justify-between relative top-0">
+        <img
             src={survivalLogo.src}
             alt="survival.fun"
             className="logoHead h-10 m-auto relative top-0"
-          /></>}
-          <span className="h-10 mr-6 wallet relative top-0"><WalletComponents /></span>
-        </header>
+          />
+        </header></>:<><header></header></>}
           <main className="flex-grow flex items-center justify-center px-4">
     <div className="flex flex-col flex-grow items-center justify-center text-black dark:text-white w-full h-full absolute top-0">
+      {isMobile ? <>
      {play === 0 && <>
      {isConnected ? <><span className="absolute bottom-0"><p className="addressDisplay relative bottom-10">{String(address).slice(0, 4)+'....'+String(address).slice(38, 42)}</p>
       <span className="relative bottom-5 text-white font-bold py-2 px-4 rounded"><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button></span></span>
      </>:<>
-     <span className="appConnect absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p>
-      <span className="relative bottom-5 text-white font-bold py-2 px-4 rounded" style={{visibility: walletActive === 1 ? "hidden" : "initial"}}><ConnectWallet /></span>
-      {walletActive === 1 && (<><span className="relative bottom-5 text-white font-bold py-2 px-4 rounded"><div className="loadButton"><img alt="loading" width="30" src={loadingGif.src} /></div></span></>)}
+     <span className="absolute bottom-0"><p className="addressDisplay relative bottom-10" style={{height: '48px', visibility: 'hidden'}}></p>
+      <span className="relative  connectButton bottom-5 text-white font-bold py-2 px-4 rounded" onClick={() => open()}>Connect</span>
       </span></>}
      </>}
      {play === 1 && <>
@@ -278,7 +307,7 @@ export default function Home() {
       <p className="agentBio text-center relative bottom-5 agentStats text-gray-200 w-1/2">Compliance: <span className="white">{agentCompliance}</span> | Creativity: <span className="white">{agentCreativity}</span> | <br/> Unhingedness: <span className="white">{agentUnhingedness}</span> | Motivation: <span className="white">{agentMotivation}</span></p>
       <p className="agentBio relative bottom-5" style={{color: '#D983F9'}}>Bio</p>
          <p className="text-center agentBio agentDesc relative bottom-5 text-gray-200 w-1/2">{agentPersonality}</p>
-      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div><img alt="loading" width="30" src={loadingGif.src} /></>:<><img alt="loading" width="30" src={loadingGif.src} /></>} 
+      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div></>:<><img alt="loading" width="30" src={loadingGif.src} /></>} 
      </>:<><img alt="loading" width="30" src={loadingGif.src} /></>}</>}
      {play === 3 && <>
               <div className="absolute top-0">
@@ -304,6 +333,7 @@ export default function Home() {
                   {messages.length === 4 && <>{"Messages Remaining: 0"}</>}
                   {messages.length === 5 && <>{"Messages Remaining: 0"}</>}
                 </span>
+                
               <p className="scenarioChat absolute top-10 grid m-auto w-full text-center justify-center items-center text-black dark:text-white p-3 self-start">
                   {scenario+"..."}
                 </p>
@@ -353,6 +383,7 @@ export default function Home() {
           {/* Invisible div to track the bottom */}
           <div ref={messagesEndRef} />
         </div>
+
 
         {/* Input Box */}
        
@@ -453,6 +484,235 @@ export default function Home() {
               
              
       </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-50 m-auto" src={agentImage} /><img className="partyImage absolute bottom-50 m-auto" src={party.src} /></>:<><img className="resultImage absolute bottom-50 m-auto" src={agentImage} /><img className="fireImage absolute bottom-50 m-auto" src={fire.src} /></>}<button className="absolute bottom-5 finishButton text-white font-bold py-2 px-4 rounded"><a href="https://survivor.fun" rel="noopener noreferrer">Play Again</a></button></>}
+    </>:<>
+      {play === 0 && <>
+     {isConnected ? <><span className="absolute bottom-[200px] right-[400px]">
+     <span className="relative bottom-5 text-white font-bold py-2 px-4 rounded"> <img
+            src={survivalLogo.src}
+            alt="survival.fun"
+            className="logoHead h-10 m-auto relative bottom-60 w-full h-full"
+          /><button onClick={() => checkPlay()} className="startMinting relative bottom-5 text-white font-bold py-2 px-4 rounded"></button><p className="addressDisplay relative top-[0px]">{String(address)}</p></span></span>
+     </>:<>
+     <span className="absolute  bottom-[200px] right-[400px]"><img
+            src={survivalLogo.src}
+            alt="survival.fun"
+            className="logoHead h-10 m-auto relative bottom-60 w-full h-full"
+          /><p className="addressDisplay relative  top-[0px]" style={{height: '48px', visibility: 'hidden'}}></p>
+      <span className="relative  connectButton bottom-5 text-white font-bold py-2 px-4 rounded" onClick={() => open()}>Connect</span>
+      </span></>}
+     </>}
+     {play === 1 && <>
+       <span className="mintSpan absolute bottom-[400px] right-[300px]"><p className="mintHead relative bottom-20 m-auto text-white font-bold py-2 px-4 rounded"></p>
+        <p className="mintText relative bottom-20  m-auto text-white font-bold py-2 px-4 rounded"></p>
+        {!loading ? <>{activeAgent ? <><button onClick={() => setPlay(2)} className="collabButton mintButton relative bottom-10 text-white font-bold py-2 px-4 rounded">Continue</button>
+        </>:<>
+        {loading ? <><button className="collabButton mintButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>:<><button onClick={() => mintAgent()} className="mintAgent relative bottom-10 text-white font-bold py-2 px-4 rounded"></button></>}</>}
+        </>:<><button className="collabButton mintButton relative bottom-10 text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button></>}</span>
+     </>}
+     {play === 2 && <>
+     {agentJson ? <>
+     {activeAgent ? <><img src={agentImage} className="agentImage absolute left-40 bottom-0" alt="agentImage" />
+      <p className="addressDisplay absolute top-10 right-40">{String(address)}</p>
+      <div className="absolute top-80 right-40 bgStats">
+      <p className="agentBio nameHeader relative bottom-0">Name</p>
+      <p className="agentBio nameStat relative bottom-0 text-center text-gray-200 w-1/2">{agentName}</p>
+      <p className="agentBio text-center relative bottom-0 agentStats text-gray-200 w-1/2">Compliance: <span className="white">{agentCompliance}</span> | Creativity: <span className="white">{agentCreativity}</span> | <br/> Unhingedness: <span className="white">{agentUnhingedness}</span> | Motivation: <span className="white">{agentMotivation}</span></p>
+      <p className="agentBio relative bottom-0" style={{color: '#D983F9'}}>Bio</p>
+         <p className="text-center agentBio agentDesc relative bottom-0 text-gray-200 w-1/2">{agentPersonality}</p>
+      <button onClick={() => {setPlay(3); onBeginScenario();}} className="startGame relative bottom-0 m-auto justify-center grid   text-white font-bold py-2 px-4 rounded"></button></div></>:<><img alt="loading" width="30" src={loadingGif.src} /></>} 
+     </>:<><img alt="loading" width="30" src={loadingGif.src} /></>}</>}
+     {play === 3 && <>
+              <div className="absolute top-40">
+              <span className="scenarioHead grid w-1/2 text-left relative top-20 items-center text-black dark:text-white h-full p-1 self-start">Scenario</span>
+              <span className="scenarioText grid m-auto w-1/2 text-center relative top-20 items-center text-black dark:text-white h-full p-3 self-start">
+                  {scenario+"..."}
+                </span><input
+            type="text"
+            className="p-2 rounded adviceBox relative top-30"
+            placeholder={"Give advice..."}
+            onChange={e => setAdvice(e.target.value)}
+          /> {advice.length === 0 ? <><button style={{visibility: 'hidden'}} className="relative top-40 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>:<><button onClick={() => {setPlay(4); onBeginCollaborate();}} className="relative top-40 collabButton text-white font-bold py-2 px-4 rounded">Collaborate</button></>}</div>
+           
+              
+         </>}
+     {play === 4 && <>
+             
+              <span className="msgRemain absolute top-0 w-full text-center p-3">
+                  {messages.length === 0 && <>{"Messages Remaining: 2"}</>}
+                  {messages.length === 1 && <>{"Messages Remaining: 2"}</>}
+                  {messages.length === 2 && <>{"Messages Remaining: 1"}</>}
+                  {messages.length === 3 && <>{"Messages Remaining: 1"}</>}
+                  {messages.length === 4 && <>{"Messages Remaining: 0"}</>}
+                  {messages.length === 5 && <>{"Messages Remaining: 0"}</>}
+                </span>
+                <span className="backgroundChat grid m-auto w-1/2 text-center justify-center items-center text-black dark:text-white self-start">
+              <p className="scenarioChat grid m-auto w-full text-center justify-center items-center text-black dark:text-white p-3 self-start">
+                  {scenario+"..."}
+                </p>
+           
+     <div className="chatArea w-full max-w-2x2 h-[55vh] rounded-lg p-4 flex flex-col">
+        {/* Chat Messages */}
+        <div className="flex-grow chatFont overflow-y-auto p-2">
+        <span className="flex adviceFlex">
+                 <p className="adviceChat grid w-full text-left text-black dark:text-white p-3 self-start">
+                  {advice+"..."}
+                </p><img src={userImage.src} className="userChat" alt="userImage" />
+                </span>
+          {messages.length === 0 ? (
+            <p className="text-center text-gray-500"></p>
+          ) : (
+            messages.map((msg, index) => (
+              
+              <div
+              className={`flex p-3 ${msg.sender === "user" ? "userReplies" : "agentReplies"}`}
+                key={index}
+              
+              > {index === 4 ? <></>:<>{msg.sender === "agent" && <><img src={agentImage} className="agentChat" alt="agentImage" /></>}
+              <div className={`${msg.sender === "agent" ? "chatBackdropAgent" : "chatBackdropUser"}`}>
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {msg.text}
+                </ReactMarkdown>
+                </div>
+                {msg.sender === "user" && <><img src={userImage.src} className="userChat" alt="userImage" /></>}</>}
+              </div>
+            ))
+          )}
+
+          {/* Thinking Indicator */}
+          {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
+
+          {/* Invisible div to track the bottom */}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Box */}
+       
+        {messages.length < 5 ? <> <div className="replyBox w-1/2 flex items-center justify-center space-x-2 m-auto"> <input
+            type="text"
+            className="inputBox flex-grow p-3 rounded border dark:bg-gray-700 dark:border-gray-600"
+            placeholder={"Type your suggestion..."}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && onSendMessage()}
+            disabled={isThinking}
+          />
+          <button
+            onClick={onSendMessage}
+            className={`px-6 py-2 font-semibold transition-all ${
+              isThinking
+                ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                : "bgSend bg-[url(./assets/img/sendButton.png)] bg-contain bg-no-repeat text-white shadow-md"
+            }`}
+            disabled={isThinking}
+          >
+          </button></div></>:<>
+          <div className="resultDiv">
+            <button
+            onClick={() => {setPlay(5);}}
+             className="resultButton"
+            disabled={isThinking}
+          >
+            Result
+          </button>  
+          </div>
+          </>}
+        
+      </div></span></>}
+           {play === 5 && <>
+               <div className="absolute top-80 left-20"> 
+             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Survival Strategy</span>
+              <span className="scenarioTextTwo grid m-auto w-1/2 relative bottom-20 text-black dark:text-white h-full p-3 self-start">
+                {messages[4].text+"..."}
+                </span> 
+           {loading ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<><button onClick={() => {onDetermineFate();setPlay(6)}} className="relative bottom-5 scenarioButton collabButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</div></>}
+          {play === 6 && <>
+          
+               <div className="absolute top-80 left-20"> 
+             <span className="fateHead grid w-1/2 text-left relative bottom-20 items-center text-black dark:text-white h-full p-1 self-start">Determing Your Fate</span>
+              <span className="scenarioTextTwo grid m-auto w-1/2 relative bottom-20 text-black dark:text-white h-full p-3 self-start">
+               {fate.length === 0 ? <><img alt="loading" width="30" src={loadingGif.src} /></>:<>Your Fate Has Been Sealed</>}   
+               </span> 
+         {fate.length === 0 ? <>
+         <button style={{visibility: 'hidden'}} className="relative bottom-40 collabButton text-white font-bold py-2 px-4 rounded">Result</button>
+         </>:<>{isResultPending ? <><button className="relative bottom-40 collabButton text-white font-bold py-2 px-4 rounded"><img alt="loading" width="30" src={loadingGif.src} /></button>
+         </>:<><button onClick={() => onResult()} className="relative bottom-40 collabButton text-white font-bold py-2 px-4 rounded">Result</button></>}
+          </>}</div></>}
+         {play === 7 && <>
+               <div className="absolute top-10"> 
+                <img className="fateImage relative top-20 left-80 m-auto" src={agentImage} />
+              <span className="fateText grid m-auto max-1/2 text-center relative top-20 left-80 items-center text-black dark:text-white h-full p-3 self-start">
+
+                   {fate.length === 0 ? (
+            <p className="text-center text-gray-500">Determining Your Fate...</p>
+          ) : (
+            fate.map((fate, index) => (
+              <div
+              className="flex p-3"
+                key={index}
+              
+              >
+              <div>
+              <p>Scenario:<span className="bold">{" "+scenario}....</span></p>
+              <br/>
+                <ReactMarkdown
+                  components={{
+                    a: props => (
+                      <a
+                        {...props}
+                        className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    ),
+                  }}
+                >
+                  {fate.text}
+                </ReactMarkdown>
+                </div>
+              </div>
+            ))
+          )} {isThinking && <div className="text-right mr-2 text-gray-500 italic">💀 Processing...</div>}
+                </span> 
+
+      </div>  {fate.length === 0 ? <><button style={{visibility: 'hidden'}} className="absolute bottom-5 left-80 finishButton text-white font-bold py-2 px-4 rounded">Continue</button>
+      </>:<>
+      <p className="survStatus absolute bottom-100 left-80">{results === 1 ? <><img src={heartImage.src} /> {agentName} Survived</>:<><img src={ghostImage.src} /> {agentName} Died</>}</p>
+      <button onClick={() => setPlay(8)} className="absolute bottom-5 right-80 finishButton text-white font-bold py-2 px-4 rounded">Continue</button></>}</>}
+      {play === 8 && <>
+               <div className="absolute top-[20svh]  right-[22svw]"> 
+                <span className="resultSpan grid m-auto w-full text-center relative top-0 items-center text-black dark:text-white h-full p-3 self-start">
+                <p className="resultHead">{results === 1 ? <>{agentName} Survived</>:<>You Killed {agentName}</>}</p>
+                <p className="resultText w-full">{results === 1 ? <><img src={heartImage.src} /> CONGRATS</>:<><img src={ghostImage.src} /> RIP</>}</p>
+                </span> 
+              
+             
+      </div>{results === 1 ? <><img className="resultAliveImage absolute bottom-10 right-80 m-auto" src={agentImage} />
+      <img className="partyImage absolute bottom-10 right-80 m-auto" src={party.src} />
+      </>:<>
+      <img className="resultImage absolute bottom-[10svh] right-[25svw] m-auto" src={agentImage} />
+      <img className="fireImage absolute bottom-[10svh] right-[23svw] m-auto" src={fire.src} /></>}
+      <button onClick={() => setPlay(9)}className="absolute bottom-5 right-[25svw] finishButton text-white font-bold py-2 px-4 rounded">Go To Stats</button></>}
+    {play === 9 && <>
+      <p className="addressDisplay absolute top-10 right-40">{String(address)}</p>
+      <div className="absolute top-80 right-40 bgStatscreen">
+      <p className="statBio relative bottom-0">Stats</p>
+      <div>
+      <p className="statBio relative bottom-0 text-center text-gray-200 w-1/2">Total Games Played</p>
+      <p className="statBio relative bottom-0" style={{fontWeight: '700'}}>14</p></div>
+      <img src={graveyard.src} />
+      <button className="relative bottom-0 m-auto justify-center grid items-center statButton text-white font-bold py-2 px-4 rounded"><a href="https://survivor.fun" rel="noopener noreferrer">Try Again</a></button></div>
+    </>}</>}
     </div>
        </main>
      {/* Footer (Fixed Height) */}
