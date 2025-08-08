@@ -43,10 +43,13 @@ export function Providers(props: { children: ReactNode }) {
       chain={base}
     >
    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+    <QueryClientProvider client={queryClient}>
+   
      <html lang="en">
      <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
       {props.children}
       </html>
+ </QueryClientProvider>
     </WagmiProvider>
      </MiniKitProvider>
   );

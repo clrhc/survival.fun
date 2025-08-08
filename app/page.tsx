@@ -28,7 +28,7 @@ import survivalLogo from './assets/img/survivorLogo.png';
 export default function Home() {
 
   const { setFrameReady, isFrameReady } = useMiniKit();
-  const {open, close} = useAppKit();
+  const {open} = useAppKit();
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const agentsContract = new ethers.Contract(Data.agentsAddress, agents.abi, provider);
   const account = useAccount();
