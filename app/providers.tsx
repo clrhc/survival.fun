@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
-import { base, baseSepolia } from '@reown/appkit/networks';
+import { base } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -17,7 +17,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/179229932']
 };
 
-const networks = [base, baseSepolia];
+const networks = [base];
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
